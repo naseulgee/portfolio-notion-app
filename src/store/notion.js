@@ -14,6 +14,7 @@ export default {
         return {
             portfolios: [],
             loading   : false,
+            addImages    : [],
         }
     },
     // 계산된 데이터. computed와 유사
@@ -27,6 +28,10 @@ export default {
     mutations : {
         resetPortfolios(state) {
             state.portfolios = []
+            state.loading = false
+        },
+        resetAddImages(state) {
+            state.addImages = []
             state.loading = false
         },
         updateState(state, payload) {
@@ -44,7 +49,7 @@ export default {
      */
     actions   : {
         // 포트폴리오 목록 검색
-        async searchPortfolios(context, payload) {
+        async searchPortfolios(context) {
             try {
                 // 로딩 상태일 경우 반복 요청 방지
                 if(context.state.loading) return
@@ -53,8 +58,8 @@ export default {
                     loading: true,
                 })
 
+                // [참고] https://developers.notion.com/reference/property-object
                 const res = await _fetchNotion({
-                    ...payload,
                     filter: {
                         property: "hide",
                         // rich_text: {
@@ -75,7 +80,7 @@ export default {
                         },
                     ],
                 })
-                console.log(res.data.results)
+                console.log("searchPortfolios:::", res.data)
 
                 context.commit('updateState', {
                     // 갱신할 데이터 : 전달할 데이터
@@ -92,6 +97,54 @@ export default {
                 })
             }
         },
+        // 첨부 이미지 목록 검색
+        async searchAddImages(context, payload) {
+            try {
+                // 로딩 상태일 경우 반복 요청 방지
+                if(context.state.loading) return
+
+                context.commit('updateState', {
+                    loading: true,
+                })
+
+                const { database_id, type } = payload
+                // [참고] https://developers.notion.com/reference/property-object
+                const res = await _fetchNotionAddImages({
+                    ...payload,
+                    filter: {
+                        and: [
+                            {
+                                property: "Project API",
+                                relation: {
+                                    contains: database_id
+                                }
+                            },
+                            {
+                                property: "type",
+                                select: {
+                                    equals: type
+                                }
+                            },
+                        ]
+                    }
+                })
+                console.log("searchAddImages:::", res.data)
+
+                context.commit('updateState', {
+                    // 갱신할 데이터 : 전달할 데이터
+                    addImages: res.data.results
+                })
+            } catch (error) {
+                console.log(error)
+                context.commit('updateState', {
+                    addImages: [],
+                })
+            } finally {
+                context.commit('updateState', {
+                    loading: false,
+                })
+            }
+        },
     },
 }
 
@@ -99,4 +152,9 @@ export default {
 async function _fetchNotion(payload) {
     // API KEY 를 포함하여 요청하는 로직은 서버리스 함수로 이동
     return await axios.post('/.netlify/functions/notion', payload)
+}
+
+async function _fetchNotionAddImages(payload) {
+    // API KEY 를 포함하여 요청하는 로직은 서버리스 함수로 이동
+    return await axios.post('/.netlify/functions/notionAddImg', payload)
 }

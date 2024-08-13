@@ -9,22 +9,20 @@
 */
 
 const { Client } = require("@notionhq/client")
-const database_id = process.env.NOTION_DATABASE_ID
+const database_id = process.env.NOTION_IMG_DATABASE_ID
 
 exports.handler = async (request, context) => {
     const payload = JSON.parse(request.body)
-    const { filter, sorts } = payload
+    const { filter } = payload
     try {
-        // [참고] https://developers.notion.com/reference/post-database-query
         const notion = new Client({ auth: process.env.NOTION_KEY })
         let res = await notion.databases.query({
             database_id,
-            filter,
-            sorts,
+            filter
         })
         return {
             statusCode: 200,
-            body: JSON.stringify(res), // 객체 데이터 -> 문자열
+            body: JSON.stringify(res),
         }
     } catch (error) {
         console.error(error)
