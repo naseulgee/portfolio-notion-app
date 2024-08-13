@@ -132,7 +132,7 @@ export default {
 
                 context.commit('updateState', {
                     // 갱신할 데이터 : 전달할 데이터
-                    addImages: res.data.results
+                    addImages: res.data.results.map(el => el.properties)
                 })
             } catch (error) {
                 console.log(error)
