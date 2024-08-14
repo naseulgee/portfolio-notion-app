@@ -50,28 +50,19 @@ export default {
     actions   : {
         // 포트폴리오 목록 검색
         async searchPortfolios(context) {
+            // 로딩 상태일 경우 반복 요청 방지
+            if(context.state.loading) return
+
+            context.commit('updateState', {
+                loading: true,
+            })
+
             try {
-                // 로딩 상태일 경우 반복 요청 방지
-                if(context.state.loading) return
-
-                context.commit('updateState', {
-                    loading: true,
-                })
-
                 // [참고] https://developers.notion.com/reference/property-object
                 const res = await _fetchNotion({
                     filter: {
                         property: "hide",
-                        // rich_text: {
-                        //     is_not_empty: true
-                        // },
-                        checkbox: {
-                            equals: false,
-                        },
-                        // number: {
-                        //     greater_than_or_equal_to: 2,
-                        // },
-                        // "contains": "A",
+                        checkbox: { equals: false },
                     },
                     sorts: [
                         {
@@ -80,33 +71,27 @@ export default {
                         },
                     ],
                 })
-                console.log("searchPortfolios:::", res.data)
+                console.log("searchPortfolios:::res:::", res.data)
 
                 context.commit('updateState', {
-                    // 갱신할 데이터 : 전달할 데이터
-                    portfolios: res.data.results
+                    portfolios: res.data.results,
+                    loading: false,
                 })
             } catch (error) {
                 console.log(error)
-                context.commit('updateState', {
-                    portfolios: [],
-                })
-            } finally {
-                context.commit('updateState', {
-                    loading: false,
-                })
+                context.commit('resetPortfolios')
             }
         },
         // 첨부 이미지 목록 검색
         async searchAddImages(context, payload) {
+            // 로딩 상태일 경우 반복 요청 방지
+            if(context.state.loading) return
+
+            context.commit('updateState', {
+                loading: true,
+            })
+
             try {
-                // 로딩 상태일 경우 반복 요청 방지
-                if(context.state.loading) return
-
-                context.commit('updateState', {
-                    loading: true,
-                })
-
                 const { database_id, type } = payload
                 // [참고] https://developers.notion.com/reference/property-object
                 const res = await _fetchNotionAddImages({
@@ -115,15 +100,11 @@ export default {
                         and: [
                             {
                                 property: "Project API",
-                                relation: {
-                                    contains: database_id
-                                }
+                                relation: { contains: database_id }
                             },
                             {
                                 property: "type",
-                                select: {
-                                    equals: type
-                                }
+                                select: { equals: type }
                             },
                         ]
                     }
@@ -132,29 +113,26 @@ export default {
 
                 context.commit('updateState', {
                     // 갱신할 데이터 : 전달할 데이터
-                    addImages: res.data.results.map(el => el.properties)
+                    addImages: res.data.results.map(el => {
+                        return {
+                            id: el.id,
+                            ...el.properties
+                        }
+                    }),
+                    loading: false,
                 })
             } catch (error) {
                 console.log(error)
-                context.commit('updateState', {
-                    addImages: [],
-                })
-            } finally {
-                context.commit('updateState', {
-                    loading: false,
-                })
+                context.commit('resetAddImages')
             }
         },
     },
 }
 
-// 내부에서만 사용한다는 의미로 함수명 앞에 언더바(_) 추가
+// 노션 데이터 요청
 async function _fetchNotion(payload) {
-    // API KEY 를 포함하여 요청하는 로직은 서버리스 함수로 이동
     return await axios.post('/.netlify/functions/notion', payload)
 }
-
 async function _fetchNotionAddImages(payload) {
-    // API KEY 를 포함하여 요청하는 로직은 서버리스 함수로 이동
     return await axios.post('/.netlify/functions/notionAddImg', payload)
 }
