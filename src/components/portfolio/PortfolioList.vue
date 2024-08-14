@@ -2,7 +2,7 @@
     <h1>
         Hi
     </h1>
-    <ul>
+    <ul class="container">
         <li>
             <Portfolio
                 v-for="portfolio in portfolios"
