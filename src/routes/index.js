@@ -6,6 +6,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import NotFound from '~/views/NotFound'
 import Home from '~/views/Home'
+import AboutMe from '~/views/AboutMe'
+import Projects from '~/views/Projects'
+import Contact from '~/views/Contact'
 
 export default createRouter({
     /** history 값 종류
@@ -31,13 +34,42 @@ export default createRouter({
              * 별도로 지정하지 않은 모든 경로 예외 처리
              * 사용 시 콜론(:) 뒤에 변수명을 적고, 정규표현식(.*)을 사용하여 전체 경로를 일치시킨다
              */
+            name: 'Error',
             path: '/:notFound(.*)',
             component: NotFound,
         },
         {
+            name: 'Home',
             path: '/',
-            alias: "/home",
-            component: Home
+            alias: '/home',
+            component: Home,
+            meta: {
+                next: 'About Me'
+            }
+        },
+        {
+            name: 'About Me',
+            path: '/about-me',
+            component: AboutMe,
+            meta: {
+                next: 'Projects'
+            }
+        },
+        {
+            name: 'Projects',
+            path: '/projects/:id',
+            component: Projects,
+            meta: {
+                next: 'Contact'
+            }
+        },
+        {
+            name: 'Contact',
+            path: '/contact',
+            component: Contact,
+            meta: {
+                next: 'About Me'
+            }
         },
     ]
 })

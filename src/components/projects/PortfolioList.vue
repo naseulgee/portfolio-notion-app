@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import Portfolio from '~/components/portfolio/Portfolio'
+import Portfolio from '~/components/projects/Portfolio'
 
 export default {
     components: {

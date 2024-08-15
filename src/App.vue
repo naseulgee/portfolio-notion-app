@@ -15,6 +15,16 @@ import BasicLayout from "~/layouts/BasicLayout";
 export default {
     components: {
         BasicLayout,
-    }
+    },
+    computed: {
+        themeColor() {
+            return this.$store.state.themeColor.isDark
+        }
+    },
+    watch: {
+        themeColor(newVal, oldVal) {
+            if(newVal != oldVal) document.documentElement.classList.toggle('dark')
+        }
+    },
 }
 </script>

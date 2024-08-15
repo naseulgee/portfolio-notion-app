@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import PortfolioList from '~/components/portfolio/PortfolioList'
+import PortfolioList from '~/components/projects/PortfolioList'
 
 export default {
     components: {

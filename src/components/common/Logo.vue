@@ -4,7 +4,28 @@
         2. 클릭 시 메인페이지로 이동할 수 있도록 RouterLink 사용
         3. 사용 위치에 따라 로고 색상과 사이즈가 달라질 수 있도록 props 로 추가 클래스를 받아서 사용
     -->
-    <RouterLink to="/">
-        Logo
+    <RouterLink
+        to="/"
+        class="d-inline-block overflow-hidden"
+        :style="{width: size+'px', height: size+'px'}">
+        <img
+            v-show="!$store.state.themeColor.isDark"
+            src="~/assets/images/common/logo.png"
+            alt="Seulgee's Portfolio website Logo" />
+        <img
+            v-show="$store.state.themeColor.isDark"
+            src="~/assets/images/common/logoW.png"
+            alt="Logo white" />
     </RouterLink>
 </template>
+
+<script>
+export default {
+    props: {
+        size: {
+            type: Number,
+            default: 40
+        }
+    }
+}
+</script>
