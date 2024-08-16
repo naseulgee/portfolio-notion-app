@@ -8,11 +8,30 @@
     <p @click="$store.dispatch('themeColor/setThemeColor', {isDark: !this.$store.state.themeColor.isDark})">
         About me
     </p>
+    <a
+        class="btn btn-link"
+        href="./">About me</a>
+    <LinkBtn>
+        <a href="./">About me</a>
+    </LinkBtn>
+    <ArrowBottomBtn>
+        <a href="./">About me</a>
+    </ArrowBottomBtn>
+    <ArrowBottomBtn>
+        <a href="./">About me</a>
+        <template #title>
+            <h1>Lodlsad</h1>
+        </template>
+    </ArrowBottomBtn>
 </template>
 
 <script>
+import LinkBtn from '~/components/common/buttons/LinkBtn';
+import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn';
 export default {
     components: {
+        LinkBtn,
+        ArrowBottomBtn,
     },
     data() {
         return {

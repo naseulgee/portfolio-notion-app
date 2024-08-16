@@ -25,6 +25,8 @@ $link-hover-color: $primary;
 $spacer: 50px;
 
 $transition-base: all .5s ease-in-out;
+$transition-fast: all .2s ease-in-out;
+$transition-slow: all 1s ease-in-out;
 
 // 필수 모듈 호출
 @import "../../../node_modules/bootstrap/scss/functions";
@@ -36,10 +38,6 @@ $h1-font-size: $h1-font-size * 4;
 $h2-font-size: $h2-font-size * 3;
 $h3-font-size: $h3-font-size * 2;
 
-// 커스텀 변수 선언
-$header-z-index: 98;
-$nav-z-index: 99;
-
 // 그 외 모듈 호출
 
 // NOTE: 부트스트랩 기본 스타일 불러오기
@@ -48,7 +46,8 @@ $nav-z-index: 99;
 @import "./darkThem";
 
 ::selection {
-    background-color: $primary-bg-subtle;
+    background-color: $primary;
+    color: $white;
 }
 img {
     width: 100%;

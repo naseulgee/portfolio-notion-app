@@ -9,11 +9,11 @@
         class="d-inline-block overflow-hidden"
         :style="{width: size+'px', height: size+'px'}">
         <img
-            v-show="!$store.state.themeColor.isDark"
+            v-show="!white"
             src="~/assets/images/common/logo.png"
             alt="Seulgee's Portfolio website Logo" />
         <img
-            v-show="$store.state.themeColor.isDark"
+            v-show="white"
             src="~/assets/images/common/logoW.png"
             alt="Logo white" />
     </RouterLink>
@@ -22,9 +22,20 @@
 <script>
 export default {
     props: {
+        isWhite: {
+            type: Boolean,
+            default: false
+        },
         size: {
             type: Number,
             default: 40
+        }
+    },
+    computed: {
+        white() {
+            if(this.isWhite) return true
+            if(this.$store.state.themeColor.isDark) return true
+            return false
         }
     }
 }

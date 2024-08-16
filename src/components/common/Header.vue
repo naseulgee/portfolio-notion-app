@@ -9,10 +9,10 @@
         $router: 페이지 조작을 위한 메소드를 가지는 객체(push, back, ...)
     -->
     <header class="header d-block w-100 position-fixed top-0 start-0">
-        <nav class="navbar container d-flex justify-content-between align-items-center w-100 h-100 py-0 position-relative">
-            <Logo />
+        <nav class="container d-flex justify-content-between align-items-center w-100 h-100 py-0 position-relative">
+            <Logo :is-white="isWhite" />
             <button
-                class="menu d-block d-md-none p-0 border-0 position-absolute top-50 end-0 translate-middle-y bg-transparent"
+                class="menu d-block d-md-none p-0 border-0 position-absolute top-50 translate-middle-y bg-transparent"
                 ref="menu"
                 @click="showNav">
                 <div
@@ -44,6 +44,11 @@ export default {
     components: {
         Logo
     },
+    data() {
+        return {
+            isWhite: false
+        }
+    },
     computed: {
         navigations() {
             return this.$router.getRoutes().filter(route => {
@@ -63,7 +68,8 @@ export default {
         },
         showNav() {
             this.$refs.menu.classList.toggle("on")
-        }
+            this.isWhite = !this.isWhite
+        },
     },
 }
 </script>
@@ -71,52 +77,8 @@ export default {
 <style lang="scss" scoped>
 .header{
     height: 100px;
-    z-index: $header-z-index;
-    .navbar{
-        // 햄버거 아이콘
-        .menu{
-            width: 30px;
-            height: 25px;
-            transition: $transition-base;
-            .bar{
-                width: 30px;
-                height: 3px;
-                position: absolute;
-                background-color: $body-color;
-                transition: $transition-base;
-                &.bar1{
-                    top: 0;
-                    left: 0;
-                    transform-origin: 2px 2px;
-                }
-                &.bar2{
-                    top: calc(50% - 1.5px);
-                    left: 0;
-                    transform-origin: calc(50% - 2.5px) calc(50% - 1px);
-                }
-                &.bar3{
-                    bottom: 0;
-                    left: 0;
-                    transform-origin: 28px -10px;
-                }
-            }
-            &.on{
-                width: 25px;
-                .bar{
-                    width: 35px;
-                    &.bar1{
-                        transform: rotate(45deg);
-                    }
-                    &.bar2{
-                        transform: rotate(135deg);
-                    }
-                    &.bar3{
-                        opacity: 0;
-                        transform: rotate(45deg);
-                    }
-                }
-            }
-        }
+    z-index: 99;
+    .container{
         .nav{
             justify-content: flex-end;
         }
@@ -125,7 +87,7 @@ export default {
 /* [PC] =================== */
 @include media-breakpoint-up(md){
     .header{
-        .navbar{
+        .container{
             .menu{
                 &:hover{
                     .bar{
@@ -140,11 +102,50 @@ export default {
 @include media-breakpoint-down(md){
     .header{
         height: 80px;
-        .navbar{
+        .container{
+            // 햄버거 아이콘
             .menu{
+                width: 30px;
+                height: 25px;
+                right: 15px;
+                transition: $transition-base;
+                .bar{
+                    width: 30px;
+                    height: 3px;
+                    position: absolute;
+                    background-color: var(--bs-body-color);
+                    transition: $transition-base;
+                    &.bar1{
+                        top: 0;
+                        left: 0;
+                        transform-origin: 2px 2px;
+                    }
+                    &.bar2{
+                        top: calc(50% - 1.5px);
+                        left: 0;
+                        transform-origin: calc(50% - 2.5px) calc(50% - 1px);
+                    }
+                    &.bar3{
+                        bottom: 0;
+                        left: 0;
+                        transform-origin: 28px -10px;
+                    }
+                }
                 &.on{
+                    width: 25px;
                     .bar{
+                        width: 35px;
                         background-color: $primary;
+                        &.bar1{
+                            transform: rotate(45deg);
+                        }
+                        &.bar2{
+                            transform: rotate(135deg);
+                        }
+                        &.bar3{
+                            opacity: 0;
+                            transform: rotate(45deg);
+                        }
                     }
                     +.nav{
                         opacity: 1;
@@ -165,7 +166,7 @@ export default {
                 position: fixed;
                 left: 0;
                 bottom: 0;
-                z-index: $nav-z-index;
+                z-index: -1;
                 background-color: $dark;
                 transition: $transition-base;
                 .nav-item{
