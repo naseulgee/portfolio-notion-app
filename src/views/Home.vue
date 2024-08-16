@@ -1,13 +1,24 @@
 <template>
-    <PortfolioList />
+    <h1>Home</h1>
+    <SloganSlide />
 </template>
 
 <script>
-import PortfolioList from '~/components/projects/PortfolioList'
+import SloganSlide from '~/components/common/SloganSlide'
 
 export default {
     components: {
-        PortfolioList
-    }
+        SloganSlide
+    },
+    data() {
+        return {
+        }
+    },
+    computed: {
+    },
+    methods: {
+    },
+    watch: {
+    },
 }
 </script>

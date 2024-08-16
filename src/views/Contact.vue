@@ -1,10 +1,14 @@
 <template>
     <h1>Contact</h1>
+    <SloganSlide />
 </template>
 
 <script>
+import SloganSlide from '~/components/common/SloganSlide'
+
 export default {
     components: {
+        SloganSlide,
     },
     data() {
         return {

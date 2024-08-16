@@ -37,6 +37,9 @@ export default createRouter({
             name: 'Error',
             path: '/:notFound(.*)',
             component: NotFound,
+            meta: {
+                next: 'Home'
+            }
         },
         {
             name: 'Home',

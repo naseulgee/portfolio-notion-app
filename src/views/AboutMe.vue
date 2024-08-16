@@ -23,13 +23,17 @@
             <h1>Lodlsad</h1>
         </template>
     </ArrowBottomBtn>
+    <SloganSlide />
 </template>
 
 <script>
-import LinkBtn from '~/components/common/buttons/LinkBtn';
-import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn';
+import SloganSlide from '~/components/common/SloganSlide'
+import LinkBtn from '~/components/common/buttons/LinkBtn'
+import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn'
+
 export default {
     components: {
+        SloganSlide,
         LinkBtn,
         ArrowBottomBtn,
     },

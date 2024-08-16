@@ -10,11 +10,13 @@
     -->
     <header class="header d-block w-100 position-fixed top-0 start-0">
         <nav class="container d-flex justify-content-between align-items-center w-100 h-100 py-0 position-relative">
-            <Logo :is-white="isWhite" />
+            <Logo
+                :is-white="showNav"
+                @click="closeNav" />
             <button
                 class="menu d-block d-md-none p-0 border-0 position-absolute top-50 translate-middle-y bg-transparent"
-                ref="menu"
-                @click="showNav">
+                :class="{ on: showNav }"
+                @click="toggleNav">
                 <div
                     v-for="i in 3"
                     :key="i"
@@ -24,7 +26,8 @@
                 <li
                     class="nav-item"
                     v-for="(navigation, i) in navigations"
-                    :key="i">
+                    :key="i"
+                    @click="closeNav">
                     <RouterLink
                         :class="['nav-link', { active: isMatch(navigation.regx) }]"
                         active-class="active"
@@ -46,7 +49,7 @@ export default {
     },
     data() {
         return {
-            isWhite: false
+            showNav: false,
         }
     },
     computed: {
@@ -56,7 +59,10 @@ export default {
             }).map(route => {
                 const { name, path } = route
                 const nav = { name, path }
-                if(name == 'Projects') nav.regx = /^\/projects/
+                if(name == 'Projects') {
+                    nav.path = '/projects/list'
+                    nav.regx = /^\/projects/
+                }
                 return nav
             })
         },
@@ -66,10 +72,14 @@ export default {
             if(!regx) return false
             return regx.test(this.$route.fullPath) // 정규표현식의 test 함수를 사용하여 포함여부 반환
         },
-        showNav() {
-            this.$refs.menu.classList.toggle("on")
-            this.isWhite = !this.isWhite
+        toggleNav() {
+            // PC일 경우 작동 안함
+            if(window.innerWidth > 768) return
+            this.showNav = !this.showNav
         },
+        closeNav() {
+            this.showNav = false
+        }
     },
 }
 </script>

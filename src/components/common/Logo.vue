@@ -33,8 +33,10 @@ export default {
     },
     computed: {
         white() {
-            if(this.isWhite) return true
+            // 어두운 테마
             if(this.$store.state.themeColor.isDark) return true
+            // 수동 조절
+            if(this.isWhite) return true
             return false
         }
     }
