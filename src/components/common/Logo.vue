@@ -22,10 +22,6 @@
 <script>
 export default {
     props: {
-        isWhite: {
-            type: Boolean,
-            default: false
-        },
         size: {
             type: Number,
             default: 40
@@ -33,11 +29,7 @@ export default {
     },
     computed: {
         white() {
-            // 어두운 테마
-            if(this.$store.state.themeColor.isDark) return true
-            // 수동 조절
-            if(this.isWhite) return true
-            return false
+            return this.$store.state.themeColor.whiteNav
         }
     }
 }

@@ -8,11 +8,11 @@
         $route : 페이지 정보 속성을 가지는 객체(fullPath, params, ...)
         $router: 페이지 조작을 위한 메소드를 가지는 객체(push, back, ...)
     -->
-    <header class="header d-block w-100 position-fixed top-0 start-0">
+    <header
+        class="header d-block w-100 position-fixed top-0 start-0"
+        :class="{ 'text-white': $store.state.themeColor.whiteNav }">
         <nav class="container d-flex justify-content-between align-items-center w-100 h-100 py-0 position-relative">
-            <Logo
-                :is-white="showNav"
-                @click="closeNav" />
+            <Logo @click="closeNav" />
             <button
                 class="menu d-block d-md-none p-0 border-0 position-absolute top-50 translate-middle-y bg-transparent"
                 :class="{ on: showNav }"
@@ -54,17 +54,17 @@ export default {
     },
     computed: {
         navigations() {
-            return this.$router.getRoutes().filter(route => {
-                if(route.name != 'Error' && route.name != 'Home') return true
-            }).map(route => {
-                const { name, path } = route
-                const nav = { name, path }
-                if(name == 'Projects') {
-                    nav.path = '/projects/list'
-                    nav.regx = /^\/projects/
-                }
-                return nav
-            })
+            return this.$router.getRoutes()
+                .filter(route => !route.meta.isHide)
+                .map(route => {
+                    const { name, path } = route
+                    const nav = { name, path }
+                    if(name == 'Projects') {
+                        nav.path = '/projects'
+                        nav.regx = /^\/projects/
+                    }
+                    return nav
+                })
         },
     },
     methods: {
@@ -75,7 +75,7 @@ export default {
         toggleNav() {
             // PC일 경우 작동 안함
             if(window.innerWidth > 768) return
-            this.showNav = !this.showNav
+            this.showNav = !this.showNav // 메뉴 아이콘 토글
         },
         closeNav() {
             this.showNav = false
@@ -91,6 +91,11 @@ export default {
     .container{
         .nav{
             justify-content: flex-end;
+            .nav-item{
+                .nav-link:not(:hover){
+                    color: inherit;
+                }
+            }
         }
     }
 }
@@ -112,6 +117,15 @@ export default {
 @include media-breakpoint-down(md){
     .header{
         height: 80px;
+        &.text-white{
+            .container{
+                .menu{
+                    .bar{
+                        background-color: $white;
+                    }
+                }
+            }
+        }
         .container{
             // 햄버거 아이콘
             .menu{
@@ -179,11 +193,6 @@ export default {
                 z-index: -1;
                 background-color: $dark;
                 transition: $transition-base;
-                .nav-item{
-                    .nav-link:not(:hover){
-                        color: $white;
-                    }
-                }
             }
         }
     }

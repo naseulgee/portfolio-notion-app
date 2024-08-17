@@ -3,6 +3,7 @@ export default {
     state     : () => {
         return {
             isDark: false,
+            whiteNav: false,
         }
     },
     mutations : {
@@ -22,6 +23,14 @@ export default {
 
             context.commit('updateState', {
                 isDark,
+            })
+        },
+        // 네비게이션 색상 설정
+        setNavColor(context, { whiteNav }) {
+            if(context.state.whiteNav == whiteNav) return
+
+            context.commit('updateState', {
+                whiteNav,
             })
         },
     },

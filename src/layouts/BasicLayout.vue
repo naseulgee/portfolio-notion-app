@@ -10,14 +10,47 @@
 </template>
 
 <script>
-import MainHeader from "~/components/common/Header";
-import MainFooter from "~/components/common/Footer";
+import MainHeader from "~/components/common/Header"
+import MainFooter from "~/components/common/Footer"
 
 export default {
     components: {
         MainHeader,
         MainFooter,
-    }
+    },
+    methods: {
+        reg_observer(){
+            // 타겟 지정
+            const targets = document.querySelectorAll('[data-them]')
+            // // const targets = document.querySelectorAll('article')
+
+            const firstIsDark = targets[0] && targets[0].offsetTop == 0
+            this.$store.dispatch('themeColor/setNavColor', { whiteNav: firstIsDark }) // 네비게이션 색상 변경
+
+            // 타겟이 관찰될 때 마다 실행되는 콜백함수
+            const handler = (entries, observer) => {
+                entries.forEach(entry => {
+                    console.log(entry.target.querySelector(".title").innerText, entry.isIntersecting, entry.target.dataset.them)
+                    // let flag = entry.target.dataset.them == 'dark'
+                    // // if(flag) document.documentElement.classList.toggle('dark', entry.isIntersecting);
+                    // this.$store.dispatch('themeColor/setThemeColor', { isDark: flag })
+                });
+            }
+
+            // 관찰자 생성
+            const observer = new IntersectionObserver(handler);
+            // 관찰 등록
+            targets.forEach(target => {
+                observer.observe(target);
+            });
+        }
+    },
+    updated() {
+        console.log("updated")
+        // 관찰 이벤트 제거
+        // 관찰 이벤트 생성
+        this.reg_observer()
+    },
 }
 </script>
 
