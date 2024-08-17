@@ -1,6 +1,5 @@
 <template>
     <footer>
-        <h1>Footer</h1>
         <div class="container py-1 text-center">
             <Logo />
             <p class="m-0">

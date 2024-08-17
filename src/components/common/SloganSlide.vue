@@ -5,7 +5,8 @@
         <div class="slogan-inner-wrapper py-4 position-relative">
             <Slogan
                 v-for="i in 2"
-                :key="i" />
+                :key="i" 
+                :next="next" />
         </div>
     </div>
 </template>
@@ -21,7 +22,11 @@ export default {
         isWhite: {
             type: Boolean,
             default: false,
-        }
+        },
+        next: {
+            type: String,
+            required: false
+        },
     }
 }
 </script>
