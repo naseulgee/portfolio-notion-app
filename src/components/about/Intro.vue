@@ -1,8 +1,7 @@
 <template>
     <article
         class="container"
-        :class="[...classObj.containerClass]"
-        :data-them="them">
+        :class="[...classObj.containerClass]">
         <strong
             class="subtitle"
             :class="[...classObj.subtitleClass]">
@@ -39,10 +38,6 @@ export default {
                 }
             }
         },
-        them: {
-            type: String,
-            required: false
-        }
     }
 }
 </script>

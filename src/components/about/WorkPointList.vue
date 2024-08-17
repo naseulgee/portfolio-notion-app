@@ -1,14 +1,12 @@
 <template>
     <h2
         class="title container mb-3"
-        :class="[...classObj.titleClass]"
-        :data-them="them">
+        :class="[...classObj.titleClass]">
         Work Point
     </h2>
     <ul
         class="container d-flex flex-wrap align-content-start justify-content-center align-items-start"
-        :class="[...classObj.containerClass, { iconOff }]"
-        :data-them="them">
+        :class="[...classObj.containerClass, { iconOff }]">
         <li>
             <span :class="[...classObj.iconClass]">
                 <font-awesome-icon
@@ -68,10 +66,6 @@ export default {
                     decClass: [],
                 }
             }
-        },
-        them: {
-            type: String,
-            required: false
         },
         iconOff: {
             type: Boolean,

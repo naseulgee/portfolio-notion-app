@@ -38,7 +38,8 @@ export default createRouter({
             path: '/:notFound(.*)',
             component: NotFound,
             meta: {
-                next: 'Home'
+                next: 'Home',
+                isHide: true, // 네비게이션 미노출
             }
         },
         {
@@ -47,7 +48,8 @@ export default createRouter({
             alias: '/home',
             component: Home,
             meta: {
-                next: 'About Me'
+                next: 'About Me',
+                isHide: true,
             }
         },
         {
@@ -60,10 +62,19 @@ export default createRouter({
         },
         {
             name: 'Projects',
-            path: '/projects/:id',
+            path: '/projects',
             component: Projects,
             meta: {
                 next: 'Contact'
+            }
+        },
+        {
+            name: 'Projects Detail',
+            path: '/projects/:id',
+            component: Projects,
+            meta: {
+                next: 'Projects',
+                isHide: true,
             }
         },
         {
