@@ -6,16 +6,9 @@
     -->
     <RouterLink
         to="/"
-        class="d-inline-block overflow-hidden"
-        :style="{width: size+'px', height: size+'px'}">
-        <img
-            v-show="!white"
-            src="~/assets/images/common/logo.png"
-            alt="Seulgee's Portfolio website Logo" />
-        <img
-            v-show="white"
-            src="~/assets/images/common/logoW.png"
-            alt="Logo white" />
+        class="logo d-inline-block overflow-hidden text-decoration-none"
+        :style="{fontSize: size+'px'}">
+        S.
     </RouterLink>
 </template>
 
@@ -24,13 +17,16 @@ export default {
     props: {
         size: {
             type: Number,
-            default: 40
+            default: 32
         }
     },
-    computed: {
-        white() {
-            return this.$store.state.themeColor.whiteNav
-        }
-    }
 }
 </script>
+
+<style lang="scss" scoped>
+.logo{
+    padding: 0 0.15em;
+    color: inherit;
+    font-family: "Cafe24 Moyamoya Face";
+}
+</style>

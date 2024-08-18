@@ -50,6 +50,7 @@ export default {
     data() {
         return {
             showNav: false,
+            navColor: false,
         }
     },
     computed: {
@@ -66,6 +67,18 @@ export default {
                     return nav
                 })
         },
+        beforeNavColor: {
+            get(){ // 일반적으로 호출 시 실행된다
+                return this.navColor
+            },
+            set(value){ // 호출 후 값을 할당 시 실행된다
+                if(value != null) {
+                    this.navColor = value
+                }else{
+                    this.navColor = this.$store.state.themeColor.whiteNav
+                }
+            }
+        }
     },
     methods: {
         isMatch(regx) {
@@ -76,6 +89,14 @@ export default {
             // PC일 경우 작동 안함
             if(window.innerWidth > 768) return
             this.showNav = !this.showNav // 메뉴 아이콘 토글
+            // 메뉴를 보여준다면
+            if(this.showNav){
+                this.beforeNavColor = this.$store.state.themeColor.whiteNav // 기존 색상 저장
+                this.$store.dispatch('themeColor/setNavColor', { whiteNav: true })
+            } else{
+                // 메뉴를 숨긴다면 기존 색상으로 변환
+                this.$store.dispatch('themeColor/setNavColor', { whiteNav: this.beforeNavColor })
+            }
         },
         closeNav() {
             this.showNav = false

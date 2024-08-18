@@ -18,38 +18,45 @@ export default {
         MainHeader,
         MainFooter,
     },
+    data() {
+        return {
+            observer: null,
+            obsOption: {
+                root: null,
+                threshold: [0, 0.5, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.5, 0.75, 1],
+            },
+        }
+    },
     methods: {
-        reg_observer(){
-            // 타겟 지정
-            const targets = document.querySelectorAll('[data-them]')
-            // // const targets = document.querySelectorAll('article')
+        initObserver(targets){
+            // 기존 관찰자 제거
+            if(this.observer != null) this.observer.disconnect()
+            // 네비게이션 색상 초기화
+            this.$store.dispatch('themeColor/setNavColor', { whiteNav: false })
 
-            const firstIsDark = targets[0] && targets[0].offsetTop == 0
-            this.$store.dispatch('themeColor/setNavColor', { whiteNav: firstIsDark }) // 네비게이션 색상 변경
-
-            // 타겟이 관찰될 때 마다 실행되는 콜백함수
-            const handler = (entries, observer) => {
-                entries.forEach(entry => {
-                    console.log(entry.target.querySelector(".title").innerText, entry.isIntersecting, entry.target.dataset.them)
-                    // let flag = entry.target.dataset.them == 'dark'
-                    // // if(flag) document.documentElement.classList.toggle('dark', entry.isIntersecting);
-                    // this.$store.dispatch('themeColor/setThemeColor', { isDark: flag })
-                });
-            }
+            // 전달 대상이 없을 경우 함수 종료
+            if(!targets || targets.length == 0) return
 
             // 관찰자 생성
-            const observer = new IntersectionObserver(handler);
+            this.observer = new IntersectionObserver(this.observing, this.obsOption);
             // 관찰 등록
             targets.forEach(target => {
-                observer.observe(target);
-            });
+                this.observer.observe(target);
+            })
+        },
+        observing(entries, observer) { // 타겟이 관찰될 때 마다 실행되는 콜백함수
+            entries.forEach(entry => {
+                const { target, isIntersecting } = entry
+                const isShow   = isIntersecting // 화면에 보이는지
+                const overHead = target.getBoundingClientRect() .top <= 0 // 상단이 브라우저 상단과 닿아있는지
+
+                this.$store.dispatch('themeColor/setNavColor', { whiteNav: isShow && overHead })
+            })
         }
     },
     updated() {
-        console.log("updated")
-        // 관찰 이벤트 제거
-        // 관찰 이벤트 생성
-        this.reg_observer()
+        // slot 에 보여주는 컴포넌트가 바뀔 때 마다 실행
+        this.initObserver(document.querySelectorAll('[data-them]'))
     },
 }
 </script>
