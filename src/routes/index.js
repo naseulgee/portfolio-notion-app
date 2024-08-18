@@ -22,8 +22,12 @@ export default createRouter({
      * 매개변수로 to, from, savedPosition 를 받는다.
      * 세번째 매개변수인 savedPosition 은 뒤로/앞으로 버튼에 의해 트리거된인 경우에만 사용 가능하다.
      */
-    scrollBehavior() {
-        return { top: 0 }
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return { top: 0 }
+        }
     },
 
     // 페이지를 배열로 관리한다
