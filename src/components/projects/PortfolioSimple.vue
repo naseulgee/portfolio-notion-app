@@ -2,7 +2,7 @@
     <RouterLink
         :to="'/projects/' + portfolio.id"
         class="portfolio-wrap hover-box text-hover-none">
-        <div class="cover">
+        <div class="cover w-100 h-100">
             <div
                 v-if="!portfolio.cover"
                 class="hover-box-img"

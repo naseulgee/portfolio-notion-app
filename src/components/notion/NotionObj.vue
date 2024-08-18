@@ -28,27 +28,43 @@
         </li>
     </ul>
 
-    <img
-        :class="classNm"
+    <div
         v-if="tagType == 'image'"
-        :src="getFileURL(prop.type)"
-        :alt="prop.name ? prop.name : dec" />
+        class="img-wrap w-100 h-100 position-relative">
+        <Loader
+            v-if="imageLoading[0]"
+            position="absolute"
+            :size="3" />
+        <img
+            :class="classNm"
+            :src="getImgURL(prop.type)"
+            :alt="prop.name ? prop.name : dec" />
+    </div>
 
     <ul
         :class="classNm"
         v-if="tagType == 'images'">
         <li
+            class="img-wrap"
             :class="childClass"
-            v-for="(item, idx) in getFilesUrl(prop.type)"
+            v-for="(item, idx) in getImgsUrl(prop.type)"
             :key="idx">
+            <Loader
+                v-if="imageLoading[idx]"
+                position="absolute"
+                :size="3" />
             <img
                 :src="item.url"
                 :alt="item.name ? item.name : dec" />
         </li>
     </ul>
+
+    <!-- 파일일 경우 -->
 </template>
 
 <script>
+import Loader from '~/components/common/Loader'
+
 /** NOTE: 실행 순서
  * 템플릿에 출력할 태그 타입 분류
  * -> template 조건 실행
@@ -72,6 +88,14 @@ export default {
         childClass: {
             type: String,
             require: false
+        }
+    },
+    components: {
+        Loader
+    },
+    data() {
+        return {
+            imageLoading: [true],
         }
     },
     computed: {
@@ -156,16 +180,19 @@ export default {
             return [ typeValue.name ]
         },
         // URL 값 추출
-        getFileURL(propType) {
+        getImgURL(propType) {
             const typeValue = this.prop[propType]
+            this.setImageLoading(typeValue.url)
             return typeValue.url
         },
         // 파일 목록 URL 값 추출
-        getFilesUrl(propType) {
+        getImgsUrl(propType) {
             const typeValue = this.prop[propType]
 
             return [
-                ...typeValue.map(el => {
+                ...typeValue.map((el, i) => {
+                    this.imageLoading[i] = true
+                    this.setImageLoading(el[el.type].url, i)
                     return {
                         url: el[el.type].url,
                         name: el.name
@@ -173,6 +200,17 @@ export default {
                 })
             ]
         },
+        setImageLoading(url, index = 0) {
+            this.$loadImage(url)
+                .then(() => { // 메모리상 이미지가 로딩이 완료될 때 까지 대기 후
+                })
+                .catch(error => { // 이미지가 없는 경우 예외처리
+                    console.error(error)
+                })
+                .finally(() => {
+                    this.imageLoading[index] = false // 로딩 종료
+                })
+        }
     },
 }
 </script>
