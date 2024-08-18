@@ -1,7 +1,7 @@
 <template>
     <svg
         class="arrow-bottom-right"
-        :style="{ fill: color }"
+        :style="{ fill: !isBgColor ? color : 'var(--bs-body-bg)' }"
         viewBox="0 0 24 24">
         <path d="M5,6.41L6.41,5L17,15.59V9H19V19H9V17H15.59L5,6.41Z" />
     </svg>
@@ -21,7 +21,11 @@ export default {
         color: {
             type: String,
             default: 'var(--bs-body-color)'
-        }
+        },
+        isBgColor: {
+            type: Boolean,
+            default: false
+        },
     }
 }
 </script>

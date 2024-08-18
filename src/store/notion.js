@@ -14,12 +14,33 @@ export default {
         return {
             portfolios: [],
             loading   : false,
-            addImages    : [],
+            addImages : [],
+            filterList: [],
+            filters   : [],
         }
     },
     // 계산된 데이터. computed와 유사
     // ★호출(사용): this.$store.getters['모듈명/함수명', 전달 인수]
     getters   : {
+        filteredPortfolios: state => {
+            const { portfolios, filters } = state
+            if(filters.length == 0) return portfolios
+
+            const { type, stack } = filters
+            if(!type && !stack) return portfolios
+
+            // 분류, 스택 stack-Design, stack-Front, stack-Back, stack-DB, stack-Test, stack-IDE, stack-Server
+            return portfolios.filter(portfolio => {
+                if(type.includes(portfolio.properties['분류'])) return portfolio
+                if(stack.Design.includes(portfolio.properties['stack-Design'])) return portfolio
+                if(stack.Front.includes(portfolio.properties['stack-Front'])) return portfolio
+                if(stack.Back.includes(portfolio.properties['stack-Back'])) return portfolio
+                if(stack.DB.includes(portfolio.properties['stack-DB'])) return portfolio
+                if(stack.Test.includes(portfolio.properties['stack-Test'])) return portfolio
+                if(stack.IDE.includes(portfolio.properties['stack-IDE'])) return portfolio
+                if(stack.Server.includes(portfolio.properties['stack-Server'])) return portfolio
+            })
+        }
     },
     /** NOTE: state의 데이터를 수정 할 수 있다. (setter)
      * ★호출(사용): commit 으로 호출된다.
@@ -29,6 +50,12 @@ export default {
         resetPortfolios(state) {
             state.portfolios = []
             state.loading = false
+        },
+        resetFilterList(state) {
+            state.filterList = []
+        },
+        resetFilters(state) {
+            state.filters = []
         },
         resetAddImages(state) {
             state.addImages = []
@@ -52,6 +79,8 @@ export default {
         async searchPortfolios(context) {
             // 로딩 상태일 경우 반복 요청 방지
             if(context.state.loading) return
+            // 이미 데이터를 받아온 경우 재요청 방지(자주 안바뀔거라)
+            if(context.state.portfolios.length != 0) return
 
             context.commit('updateState', {
                 loading: true,
@@ -81,6 +110,45 @@ export default {
                 console.log(error)
                 context.commit('resetPortfolios')
             }
+        },
+        // 포트폴리오 필터 목록 검색
+        async searchFilterList(context) {
+            // 이미 데이터를 받아온 경우 재요청 방지(자주 안바뀔거라)
+            if(context.state.filterList.length != 0) return
+
+            try {
+                const res = await _fetchNotion({
+                    isTable: true
+                })
+                // console.log("searchFilterList:::res:::", res.data.properties)
+
+                const filters = [
+                    '분류',
+                    '스택 stack-Design',
+                    'stack-Front',
+                    'stack-Back',
+                    'stack-DB',
+                    'stack-Test',
+                    'stack-IDE',
+                    'stack-Server'
+                ]
+                const filterList = Object.values(res.data.properties).filter(pp => {
+                    if(filters.includes(pp.name)) return pp
+                })
+                console.log("searchFilterList:::filtered:::", filterList)
+                context.commit('updateState', {
+                    filterList
+                })
+            } catch (error) {
+                console.log(error)
+                context.commit('resetFilterList')
+            }
+        },
+        // 포트폴리오 필터링
+        searchFilterdProtfolios(context, payload) {
+            context.commit('updateState', {
+                ...payload
+            })
         },
         // 첨부 이미지 목록 검색
         async searchAddImages(context, payload) {

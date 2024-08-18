@@ -21,7 +21,7 @@
         <PjtIntro :class-obj="pjtIntroClass" />
         <SloganSlide next="Projects" />
         <div class="mt-4">
-            <PortfolioSimpleList :limit="4" />
+            <PortfolioList :limit="4" />
         </div>
         <div class="container">
             <RouterLink
@@ -57,17 +57,19 @@
     </section>
     <!-- e: 작업 포인트 -->
     <!-- s: 풋터 슬로건 -->
-    <RouterLink
-        class="text-hover-none text-decoration-none"
-        data-them="white"
-        to="/projects">
-        <div class="container mt-4">
-            <ArrowBottomBtn>
-                View all portfolios
-            </ArrowBottomBtn>
-        </div>
-        <SloganSlide />
-    </RouterLink>
+    <section>
+        <RouterLink
+            class="text-hover-none text-decoration-none"
+            data-them="white"
+            to="/projects">
+            <div class="container mt-4">
+                <ArrowBottomBtn>
+                    View all portfolios
+                </ArrowBottomBtn>
+            </div>
+            <SloganSlide />
+        </RouterLink>
+    </section>
     <!-- e: 풋터 슬로건 -->
 </template>
 
@@ -79,7 +81,7 @@ import AboutIntro from '~/components/about/Intro'
 import WorkPointIntro from '~/components/about/WorkPointIntro'
 import WorkPointList from '~/components/about/WorkPointList'
 import PjtIntro from '~/components/projects/Intro'
-import PortfolioSimpleList from '~/components/projects/PortfolioSimpleList'
+import PortfolioList from '~/components/projects/PortfolioList'
 
 export default {
     components: {
@@ -90,7 +92,7 @@ export default {
         WorkPointIntro,
         WorkPointList,
         PjtIntro,
-        PortfolioSimpleList,
+        PortfolioList,
     },
     data() {
         return {
