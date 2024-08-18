@@ -1,22 +1,27 @@
 <template>
     <span
+        :class="classNm"
         v-if="tagType == 'text'"
         v-html="getText(prop.type)"></span>
 
     <a
+        :class="classNm"
         v-if="tagType == 'link'"
         :href="getCommonVal(prop.type)"
         target="_blank">바로가기</a>
 
     <input
+        :class="classNm"
         v-if="tagType == 'checkbox'"
         type="checkbox"
         :name="dec"
         :checked="prop.checkbox" />
 
-    <ul 
+    <ul
+        :class="classNm"
         v-if="tagType == 'list'">
         <li
+            :class="childClass"
             v-for="(item, idx) in getList(prop.type)"
             :key="idx">
             {{ item }}
@@ -24,13 +29,16 @@
     </ul>
 
     <img
+        :class="classNm"
         v-if="tagType == 'image'"
         :src="getFileURL(prop.type)"
         :alt="prop.name ? prop.name : dec" />
 
     <ul
+        :class="classNm"
         v-if="tagType == 'images'">
         <li
+            :class="childClass"
             v-for="(item, idx) in getFilesUrl(prop.type)"
             :key="idx">
             <img
@@ -56,6 +64,14 @@ export default {
         dec: { // 이미지 설명 및 체크박스 name 용
             type: String,
             default: ''
+        },
+        classNm: {
+            type: String,
+            require: false
+        },
+        childClass: {
+            type: String,
+            require: false
         }
     },
     computed: {

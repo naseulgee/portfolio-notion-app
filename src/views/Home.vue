@@ -15,9 +15,14 @@
     </section>
     <!-- e: 인트로 -->
     <!-- s: 프로젝트 -->
-    <section class="w-100 min-vh-100 py-5">
+    <section
+        class="w-100 min-vh-100 py-5"
+        data-them="white">
         <PjtIntro :class-obj="pjtIntroClass" />
         <SloganSlide next="Projects" />
+        <div class="mt-4">
+            <PortfolioSimpleList :limit="4" />
+        </div>
         <div class="container">
             <RouterLink
                 class="d-inline-block text-hover-none text-decoration-none"
@@ -54,6 +59,7 @@
     <!-- s: 풋터 슬로건 -->
     <RouterLink
         class="text-hover-none text-decoration-none"
+        data-them="white"
         to="/projects">
         <div class="container mt-4">
             <ArrowBottomBtn>
@@ -73,6 +79,7 @@ import AboutIntro from '~/components/about/Intro'
 import WorkPointIntro from '~/components/about/WorkPointIntro'
 import WorkPointList from '~/components/about/WorkPointList'
 import PjtIntro from '~/components/projects/Intro'
+import PortfolioSimpleList from '~/components/projects/PortfolioSimpleList'
 
 export default {
     components: {
@@ -83,6 +90,7 @@ export default {
         WorkPointIntro,
         WorkPointList,
         PjtIntro,
+        PortfolioSimpleList,
     },
     data() {
         return {

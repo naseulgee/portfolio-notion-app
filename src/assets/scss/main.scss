@@ -60,3 +60,118 @@ img {
         color: inherit !important;
     }
 }
+/* s: 호버 박스 */
+.hover-box{
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 0 1.5em 0 1.5em;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    transition: $transition-base;
+    z-index: 1;
+    &::before{ /* + MORE 버튼 */
+        content: '+\AMORE';
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 5em;
+        height: 5em;
+        padding: 0.4em;
+        border: 0.2em solid $white;
+        border-radius: 100%;
+        overflow: hidden;
+        background-color: transparentize($primary, 0.2);
+        box-shadow: 10px 10px 25px transparentize($black, 0.55) !important;
+        color: $white;
+        opacity: 0;
+        text-align: center;
+        line-height: 1.2;
+        white-space: pre; // \A 를 통한 줄바꿈
+        position: absolute;
+        left: 50%;
+        bottom: 40%;
+        z-index: 3;
+        transform: translate(-50%, 50%);
+        transition: $transition-base;
+    }
+    &::after{ /* 배경 어둡게 */
+        content: '';
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+                to bottom,
+                transparentize(darken($primary, 12%), 1),
+                $primary);
+        backdrop-filter: blur(2px);
+        opacity: 0;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        transition: $transition-base;
+    }
+    .hover-box-img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: -1;
+        transform: translate(-50%, -50%);
+        transition: $transition-base;
+    }
+    .hover-box-info{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        width: 100%;
+        height: 100%;
+        padding: map-get($spacers, 2);
+        background: linear-gradient(
+                    to bottom,
+                    transparent,
+                    transparentize($dark, 0.5) 80%);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        text-wrap: wrap;
+        z-index: 2;
+        color: $white;
+        word-break: break-word;
+        .fa-circle-plus{
+            opacity: 1;
+            color: $white;
+            position: absolute;
+            transition: $transition-base;
+        }
+    }
+    &:hover{
+        border-radius: 0;
+        &::before{
+            opacity: 1;
+            bottom: 50%;
+        }
+        &::after{
+            opacity: 1;
+        }
+        .hover-box-img{
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+        .hover-box-info{
+            .fa-circle-plus{
+                opacity: 0;
+                transform: translateY(100%);
+            }
+            [class^="ellipsis"]{
+                display: block;
+            }
+        }
+    }
+}
+/* e: 호버 박스 */

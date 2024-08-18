@@ -23,7 +23,7 @@ export default {
             observer: null,
             obsOption: {
                 root: null,
-                threshold: [0, 0.5, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.5, 0.75, 1],
+                threshold: [0, 1],
             },
         }
     },
@@ -48,11 +48,18 @@ export default {
             entries.forEach(entry => {
                 const { target, isIntersecting } = entry
                 const isShow   = isIntersecting // 화면에 보이는지
-                const overHead = target.getBoundingClientRect() .top <= 0 // 상단이 브라우저 상단과 닿아있는지
+                const overHead = target.getBoundingClientRect().top <= 0 // 상단이 브라우저 상단과 닿아있는지
 
-                this.$store.dispatch('themeColor/setNavColor', { whiteNav: isShow && overHead })
+                if(isShow && overHead) {
+                    this.$store.dispatch('themeColor/setNavColor', { whiteNav: target.dataset.them == 'dark' })
+                } else {
+                    const nextTarget = target.nextElementSibling
+                    if(nextTarget){
+                        this.$store.dispatch('themeColor/setNavColor', { whiteNav: nextTarget.dataset.them == 'dark' })
+                    }
+                }
             })
-        }
+        },
     },
     updated() {
         // slot 에 보여주는 컴포넌트가 바뀔 때 마다 실행

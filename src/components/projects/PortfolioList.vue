@@ -24,10 +24,5 @@ export default {
             return this.$store.state.notion.portfolios
         }
     },
-    methods: {
-    },
-    async mounted() {
-        this.$store.dispatch('notion/searchPortfolios')
-    },
 }
 </script>
