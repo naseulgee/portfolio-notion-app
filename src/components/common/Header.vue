@@ -24,6 +24,17 @@
             </button>
             <ul class="nav">
                 <li
+                    class="btn btn-them d-flex p-0 border border-dark rounded-pill overflow-hidden"
+                    :class="{ on: isDark }"
+                    @click="toggleThem">
+                    <font-awesome-icon
+                        icon="fa-solid fa-sun"
+                        class="icon sun d-block w-50 h-100 position-relative z-1" />
+                    <font-awesome-icon
+                        icon="fa-solid fa-moon"
+                        class="icon moon d-block w-50 h-100 position-relative z-1" />
+                </li>
+                <li
                     class="nav-item"
                     v-for="(navigation, i) in navigations"
                     :key="i"
@@ -78,6 +89,9 @@ export default {
                     this.navColor = this.$store.state.themeColor.whiteNav
                 }
             }
+        },
+        isDark() {
+            return this.$store.state.themeColor.isDark
         }
     },
     methods: {
@@ -100,6 +114,9 @@ export default {
         },
         closeNav() {
             this.showNav = false
+        },
+        toggleThem() {
+            this.$store.dispatch('themeColor/setThemeColor', {isDark: !this.$store.state.themeColor.isDark})
         }
     },
 }
@@ -111,7 +128,51 @@ export default {
     z-index: 99;
     .container{
         .nav{
+            align-items: center;
             justify-content: flex-end;
+            .btn-them{
+                $icon-size: 30px;
+                width: $icon-size * 2;
+                height: $icon-size;
+                position: relative;
+                background-color: $primary;
+                transition: $transition-fast;
+                &::before{
+                    content: '';
+                    display: block;
+                    width: 50%;
+                    height: 100%;
+                    // border: 1px solid $gray-200;
+                    border-radius: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    background-color: #fff;
+                    transition: $transition-fast;
+                }
+                .icon{
+                    padding: 10%;
+                    box-sizing: border-box;
+                    transition: $transition-fast;
+                    &.sun{
+                        color: #ffa500;
+                    }
+                    &.moon{
+                        color: $dark;
+                    }
+                }
+                &.on{
+                    background-color: $dark;
+                    &::before{
+                        left: 50%;
+                    }
+                    .icon{
+                        &.sun{
+                            color: #fff;
+                        }
+                    }
+                }
+            }
             .nav-item{
                 .nav-link:not(:hover){
                     color: inherit;
@@ -212,7 +273,7 @@ export default {
                 left: 0;
                 bottom: 0;
                 z-index: -1;
-                background-color: $dark;
+                background-color: var(--bs-dark);
                 transition: $transition-base;
             }
         }
