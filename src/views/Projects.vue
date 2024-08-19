@@ -23,7 +23,7 @@
     <section class="overflow-hidden">
         <RouterLink
             class="text-hover-none text-decoration-none"
-            to="/about-me">
+            to="/contact">
             <div class="container mt-4">
                 <ArrowBottomBtn>
                     Contact
