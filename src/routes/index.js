@@ -8,6 +8,7 @@ import NotFound from '~/views/NotFound'
 import Home from '~/views/Home'
 import AboutMe from '~/views/AboutMe'
 import Projects from '~/views/Projects'
+import ProjectDetail from '~/views/ProjectDetail'
 import Contact from '~/views/Contact'
 
 export default createRouter({
@@ -75,7 +76,7 @@ export default createRouter({
         {
             name: 'Projects Detail',
             path: '/projects/:id',
-            component: Projects,
+            component: ProjectDetail,
             meta: {
                 next: 'Projects',
                 isHide: true,

@@ -14,6 +14,7 @@ export default {
         return {
             loading   : false,
             portfolios: [],
+            portfolio : {},
             addImages : [],
             filterList: [], // 속성 목록
             filters   : [], // 속성 필터링 조건 목록
@@ -63,6 +64,7 @@ export default {
     mutations : {
         resetPortfolios(state) {
             state.portfolios = []
+            state.portfolio = {}
             state.loading = false
         },
         resetFilters(state) {
@@ -115,6 +117,7 @@ export default {
 
                 context.commit('updateState', {
                     portfolios: res.data.results,
+                    portfolio: res.data.results[0],
                     loading: false,
                 })
             } catch (error) {
@@ -160,6 +163,16 @@ export default {
         setFilters(context, payload) {
             context.commit('updateState', {
                 ...payload
+            })
+        },
+        // 포트폴리오 상세 조회
+        searchPortfolio(context, payload) {
+            // 로딩 상태일 경우 반복 요청 방지
+            if(context.state.loading) return
+
+            context.commit('updateState', {
+                ...payload,
+                loading: false,
             })
         },
         // 첨부 이미지 목록 검색

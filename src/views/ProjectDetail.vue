@@ -1,5 +1,13 @@
 <template>
-    <article
+    <section
+        v-if="isLoding"
+        class="container vh-min-100">
+        <Loader
+            position="fixed"
+            :size="5" />
+    </section>
+    <section
+        v-else
         @click="showImgs(portfolio.id)">
         <div>
             <strong>icon :: </strong>
@@ -231,32 +239,28 @@
                 :key="imgProps.id"
                 :prop="imgProps.img" />
         </div>
-
-        <hr />
-    </article>
+    </section>
 </template>
 
 <script>
 import NotionObj from '~/components/notion/NotionObj'
+import Loader from '~/components/common/Loader'
 
 export default {
-    // 부모 컴포넌트에게 전달받을 속성 정의
-    props: {
-        portfolio: {
-            type: Object,
-            default: () => {},
-            required: true
-        }
-    },
     components: {
         NotionObj,
-    },
-    data() {
-        return {
-            pfprop: this.portfolio.properties
-        }
+        Loader,
     },
     computed: {
+        isLoding() {
+            return this.$store.state.notion.loading
+        },
+        portfolio() {
+            return this.$store.state.notion.portfolio
+        },
+        pfprop() {
+            return this.portfolio.properties
+        },
         addImg() {
             return this.$store.state.notion.addImages
         }

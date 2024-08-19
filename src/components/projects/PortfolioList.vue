@@ -8,12 +8,12 @@
                 v-if="(i - 1) % 2 == 0"
                 class="floating-wrap d-flex flex-wrap justify-content-between align-items-end mb-5"
                 :data-num="i">
-                <PortfolioSimple
+                <PortfolioThumb
                     v-if="portfolios[(i - 1)]"
                     class="floating-box"
                     :class="{ 'small-box': (i - 1) % 4 == 0 }"
                     :portfolio="portfolios[(i - 1)]" />
-                <PortfolioSimple
+                <PortfolioThumb
                     v-if="portfolios[i]"
                     class="floating-box"
                     :class="{ 'small-box': (i - 1) % 4 != 0 }"
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import PortfolioSimple from '~/components/projects/PortfolioSimple'
+import PortfolioThumb from '~/components/projects/PortfolioThumb'
 
 export default {
     props: {
@@ -38,7 +38,7 @@ export default {
         },
     },
     components: {
-        PortfolioSimple,
+        PortfolioThumb,
     },
     data() {
         return {
@@ -104,7 +104,6 @@ export default {
     },
     async mounted() {
         this.initObserver(document.querySelectorAll('.floating-wrap'))
-        this.$store.dispatch('notion/searchPortfolios')
     },
     beforeUnmount() {
         this.unObserve(document.querySelectorAll('.floating-wrap'));

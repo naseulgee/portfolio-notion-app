@@ -60,6 +60,22 @@ img {
         color: inherit !important;
     }
 }
+.ellipsis {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: keep-all;
+    &.ellipsis-1{
+        -webkit-line-clamp: 1;
+    }
+    &.ellipsis-2{
+        -webkit-line-clamp: 2;
+    }
+    &.ellipsis-3{
+        -webkit-line-clamp: 3;
+    }
+}
 /* s: 호버 박스 */
 .hover-box{
     display: block;
@@ -175,3 +191,11 @@ img {
     }
 }
 /* e: 호버 박스 */
+/* s: 모달 */
+.modal{
+    &.on{
+        display: block;
+        background-color: rgba(var(--bs-dark-rgb), .5);
+    }
+}
+/* e: 모달 */

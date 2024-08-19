@@ -61,6 +61,9 @@ export default {
             })
         },
     },
+    async mounted() {
+        this.$store.dispatch('notion/searchPortfolios')
+    },
     updated() {
         // slot 에 보여주는 컴포넌트가 바뀔 때 마다 실행
         this.initObserver(document.querySelectorAll('[data-them]'))

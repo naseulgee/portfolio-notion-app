@@ -1,6 +1,7 @@
 <template>
     <RouterLink
         :to="'/projects/' + portfolio.id"
+        @click="setPortfolio"
         class="portfolio-wrap hover-box text-hover-none">
         <div class="cover w-100 h-100">
             <div
@@ -35,54 +36,6 @@
                     :prop="pfprop['한줄소개']"
                     dec="한줄소개" />
             </div>
-            <!-- <div>
-                <strong>분류 :: </strong>
-                <NotionObj
-                    :prop="pfprop['분류']"
-                    dec="분류" />
-            </div> -->
-            <!-- <div>
-                <strong>stack-Design :: </strong>
-                <NotionObj
-                    :prop="pfprop['stack-Design']"
-                    dec="stack-Design" />
-            </div>
-            <div>
-                <strong>stack-Front :: </strong>
-                <NotionObj
-                    :prop="pfprop['stack-Front']"
-                    dec="stack-Front" />
-            </div>
-            <div>
-                <strong>stack-Back :: </strong>
-                <NotionObj
-                    :prop="pfprop['stack-Back']"
-                    dec="stack-Back" />
-            </div>
-            <div>
-                <strong>stack-DB :: </strong>
-                <NotionObj
-                    :prop="pfprop['stack-DB']"
-                    dec="stack-DB" />
-            </div>
-            <div>
-                <strong>stack-Test :: </strong>
-                <NotionObj
-                    :prop="pfprop['stack-Test']"
-                    dec="stack-Test" />
-            </div>
-            <div>
-                <strong>stack-IDE :: </strong>
-                <NotionObj
-                    :prop="pfprop['stack-IDE']"
-                    dec="stack-IDE" />
-            </div>
-            <div>
-                <strong>stack-Server :: </strong>
-                <NotionObj
-                    :prop="pfprop['stack-Server']"
-                    dec="stack-Server" />
-            </div> -->
         </div>
     </RouterLink>
 </template>
@@ -119,5 +72,10 @@ export default {
             return `rgb(${red}, ${green}, ${blue})`;
         }
     },
+    methods: {
+        setPortfolio() {
+            this.$store.dispatch('notion/searchPortfolio', { portfolio: this.portfolio })
+        }
+    }
 }
 </script>
