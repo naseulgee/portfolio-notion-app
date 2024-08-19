@@ -57,6 +57,9 @@ export default {
         },
         portfolios() {
             return this.$store.getters['notion/filteredPortfolios']
+        },
+        isLoading() {
+            return this.$store.state.notion.loading
         }
     },
     methods: {

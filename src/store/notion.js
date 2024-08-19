@@ -41,7 +41,9 @@ export default {
 
                     for (let k = 0; k < portfolios.length; k++) {
                         const portfolio = portfolios[k] // 포트폴리오
-                        const propertiesNameList = portfolio.properties[key].multi_select?.map(option => option.name);
+                        let select = portfolio.properties[key].multi_select
+                        if(!select) select = portfolio.properties[key].select
+                        const propertiesNameList = select?.name;
                         // console.log("portfolio:::", propertiesNameList)
 
                         if(propertiesNameList?.includes(filterString)) {
