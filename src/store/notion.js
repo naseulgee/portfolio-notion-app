@@ -12,34 +12,46 @@ export default {
     // ★호출(사용): this.$store.state.모듈명.함수명
     state     : () => {
         return {
-            portfolios: [],
             loading   : false,
+            portfolios: [],
             addImages : [],
-            filterList: [],
-            filters   : [],
+            filterList: [], // 속성 목록
+            filters   : [], // 속성 필터링 조건 목록
         }
     },
     // 계산된 데이터. computed와 유사
     // ★호출(사용): this.$store.getters['모듈명/함수명', 전달 인수]
     getters   : {
+        // NOTE: API 를 이용하여 필터링한 데이터를 받을 수 도 있지만, getters 연습과 네트워크 사용을 줄여보기 위해 getters로 작성함
         filteredPortfolios: state => {
             const { portfolios, filters } = state
-            if(filters.length == 0) return portfolios
+            // 선택된 필터링 조건이 없으면 포트폴리오 전체 리스트 전달
+            if(!filters || Object.values(filters).join('').length == 0) return portfolios
 
-            const { type, stack } = filters
-            if(!type && !stack) return portfolios
+            const filteredPortfolios = {}
+            // NOTE: 필터링 조건이 포폴에 작성값 개수보다 작을 확률이 높음으로 필터조건 -> 포폴속성 순으로 반복
+            for (const key in filters) {
+                const filterValues = filters[key] // 선택된 분류별 필터 값 목록
+                // console.log("filterValues:::", filterValues)
+                if(!filterValues || filterValues.length == 0) continue
 
-            // 분류, 스택 stack-Design, stack-Front, stack-Back, stack-DB, stack-Test, stack-IDE, stack-Server
-            return portfolios.filter(portfolio => {
-                if(type.includes(portfolio.properties['분류'])) return portfolio
-                if(stack.Design.includes(portfolio.properties['stack-Design'])) return portfolio
-                if(stack.Front.includes(portfolio.properties['stack-Front'])) return portfolio
-                if(stack.Back.includes(portfolio.properties['stack-Back'])) return portfolio
-                if(stack.DB.includes(portfolio.properties['stack-DB'])) return portfolio
-                if(stack.Test.includes(portfolio.properties['stack-Test'])) return portfolio
-                if(stack.IDE.includes(portfolio.properties['stack-IDE'])) return portfolio
-                if(stack.Server.includes(portfolio.properties['stack-Server'])) return portfolio
-            })
+                for (let j = 0; j < filterValues.length; j++) {
+                    const filterString = filterValues[j]; // 속성값
+                    // console.log("filterString:::", filterString)
+
+                    for (let k = 0; k < portfolios.length; k++) {
+                        const portfolio = portfolios[k] // 포트폴리오
+                        const propertiesNameList = portfolio.properties[key].multi_select?.map(option => option.name);
+                        // console.log("portfolio:::", propertiesNameList)
+
+                        if(propertiesNameList?.includes(filterString)) {
+                            filteredPortfolios[portfolio.id] = portfolio
+                        }
+                    }
+                }
+            }
+            console.log("filteredPortfolios::::", filteredPortfolios)
+            return Object.values(filteredPortfolios)
         }
     },
     /** NOTE: state의 데이터를 수정 할 수 있다. (setter)
@@ -50,9 +62,6 @@ export default {
         resetPortfolios(state) {
             state.portfolios = []
             state.loading = false
-        },
-        resetFilterList(state) {
-            state.filterList = []
         },
         resetFilters(state) {
             state.filters = []
@@ -122,9 +131,10 @@ export default {
                 })
                 // console.log("searchFilterList:::res:::", res.data.properties)
 
-                const filters = [
+                const setfilters = [
                     '분류',
-                    '스택 stack-Design',
+                    '담당분야',
+                    'stack-Design',
                     'stack-Front',
                     'stack-Back',
                     'stack-DB',
@@ -133,7 +143,7 @@ export default {
                     'stack-Server'
                 ]
                 const filterList = Object.values(res.data.properties).filter(pp => {
-                    if(filters.includes(pp.name)) return pp
+                    if(setfilters.includes(pp.name)) return pp
                 })
                 console.log("searchFilterList:::filtered:::", filterList)
                 context.commit('updateState', {
@@ -145,7 +155,7 @@ export default {
             }
         },
         // 포트폴리오 필터링
-        searchFilterdProtfolios(context, payload) {
+        setFilters(context, payload) {
             context.commit('updateState', {
                 ...payload
             })

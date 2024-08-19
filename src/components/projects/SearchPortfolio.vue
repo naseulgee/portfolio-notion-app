@@ -2,10 +2,11 @@
     <form
         ref="filterList"
         class="container">
+        <!-- {{ console.log(filterList) }} -->
         <template
             v-for="filter in filterList"
             :key="filter.id">
-            <template
+            <div
                 v-for="option in filter.multi_select"
                 :key="option.id">
                 <label
@@ -14,11 +15,14 @@
                     @click="search">
                     <input
                         type="checkbox"
-                        :name="filter.name" />
+                        :value="val.name"
+                        v-model="formData[filter.name]" />
                     <NotionObj :prop="{ type: 'rich_text', rich_text: [{plain_text: val.name}] }" />
                 </label>
-            </template>
+            </div>
         </template>
+        <hr />
+        {{ formData }}
     </form>
 </template>
 
@@ -31,24 +35,39 @@ export default {
     },
     data() {
         return {
-            checkedType: [],
-            checkedStack: [],
+            formData: {},
         }
     },
     computed: {
         filterList() {
-            return this.$store.state.notion.filterList
-        }
+            const { filterList } = this.$store.state.notion
+            const sortedList = filterList.sort((a, b) => {
+                const sortNumA = a.description;
+                const sortNumB = b.description;
+                
+                if(sortNumA > sortNumB) return 1;
+                if(sortNumA < sortNumB) return -1;
+                if(sortNumA === sortNumB) return 0;
+            })
+            sortedList.forEach(f => {
+                this.formData[f.name] = []
+            })
+            return sortedList
+        },
     },
     methods: {
         search(event) {
             const { target } = event
             if(target.type != 'checkbox') return
-            
-            // Form 데이타를 말아서 스토어 게터 호출해야함!
-            // this.$store.getters['notion/filteredPortfolios']()
-            // if(target.name == '분류') checkedType
-            // console.log(formData, this.$refs.filterList)
+
+            this.$store.dispatch('notion/setFilters', {
+                filters: this.formData
+            })
+        }
+    },
+    watch: {
+        formData(val) {
+            console.log(val)
         }
     },
     mounted() {

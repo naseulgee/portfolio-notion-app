@@ -56,14 +56,7 @@ export default {
             return cnt
         },
         portfolios() {
-            // const portfolios = this.$store.getters['notion/filteredPortfolios']
-            const { portfolios } = this.$store.state.notion
-            // if(this.useFilter){
-            //     return portfolios.filter(portfolio => {
-            //         if(portfolio.cover) return portfolio
-            //     })
-            // }
-            return portfolios
+            return this.$store.getters['notion/filteredPortfolios']
         }
     },
     methods: {
@@ -93,7 +86,7 @@ export default {
                     const { height, top } = target.getBoundingClientRect()
                     const smallChild = target.querySelector('.small-box')
 
-                    console.log(target, smallChild)
+                    // console.log(target, smallChild)
                     if(smallChild) {
                         const space = height - smallChild.clientHeight
                         let move = (height - top) * 0.5
