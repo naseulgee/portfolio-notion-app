@@ -102,7 +102,7 @@ export default {
             })
         },
     },
-    async mounted() {
+    mounted() {
         this.initObserver(document.querySelectorAll('.floating-wrap'))
     },
     beforeUnmount() {

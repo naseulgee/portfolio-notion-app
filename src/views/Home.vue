@@ -60,7 +60,6 @@
     <section>
         <RouterLink
             class="text-hover-none text-decoration-none"
-            data-them="white"
             to="/projects">
             <div class="container mt-4">
                 <ArrowBottomBtn>

@@ -15,21 +15,17 @@
     </section>
     <!-- e: 프로젝트 -->
     <!-- s: 성과 -->
-    <section
-        class="py-5"
-        data-them="white">
+    <section class="py-5">
         <Performance />
     </section>
     <!-- e: 성과 -->
     <!-- s: 풋터 슬로건 -->
-    <section
-        class="overflow-hidden bg-dark text-white"
-        data-them="white">
+    <section class="overflow-hidden">
         <RouterLink
-            class="text-white text-hover-none text-decoration-none"
+            class="text-hover-none text-decoration-none"
             to="/about-me">
             <div class="container mt-4">
-                <ArrowBottomBtn is-bg-color>
+                <ArrowBottomBtn>
                     Contact
                 </ArrowBottomBtn>
             </div>

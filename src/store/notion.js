@@ -92,8 +92,6 @@ export default {
         async searchPortfolios(context) {
             // 로딩 상태일 경우 반복 요청 방지
             if(context.state.loading) return
-            // 이미 데이터를 받아온 경우 재요청 방지(자주 안바뀔거라)
-            if(context.state.portfolios.length != 0) return
 
             context.commit('updateState', {
                 loading: true,
