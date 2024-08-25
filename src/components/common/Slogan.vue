@@ -15,8 +15,8 @@ export default {
     computed: {
         content() {
             const key = this.next ? this.next : this.$route.meta.next
-            let text = this.$store.state.about.slogans[key]
-            if(!text) text = this.$store.state.about.slogans.home
+            let text = this.$store.state.slogans[key]
+            if(!text) text = this.$store.state.slogans['Home']
             return text
         }
     },
