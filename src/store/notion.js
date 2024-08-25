@@ -217,6 +217,15 @@ export default {
                 context.commit('resetAddImages')
             }
         },
+        // 문의 등록
+        async addContact(context, payload) {
+            try {
+                const res = await _fetchNotionContact(payload)
+                console.log("addContact:::", res.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
     },
 }
 
@@ -226,4 +235,7 @@ async function _fetchNotion(payload) {
 }
 async function _fetchNotionAddImages(payload) {
     return await axios.post('/.netlify/functions/notionAddImg', payload)
+}
+async function _fetchNotionContact(payload) {
+    return await axios.post('/.netlify/functions/notionContact', payload)
 }

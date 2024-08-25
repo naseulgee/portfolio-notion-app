@@ -1,4 +1,5 @@
-/** NOTE: Netlify 내부에서 웹 프로젝트와 별도의 서버처럼 실행시켜주는 기능을 명시한 파일
+/** NOTE: 프로젝트 정보 조회
+ * Netlify 내부에서 웹 프로젝트와 별도의 서버처럼 실행시켜주는 기능을 명시한 파일
  * [참고] https://docs.netlify.com/functions/get-started/
  * 
  * - Node.js 환경에서 동작한다
@@ -18,13 +19,13 @@ exports.handler = async (request, context) => {
         // [참고] https://developers.notion.com/reference/post-database-query
         const notion = new Client({ auth: process.env.NOTION_KEY })
         let res
-        if(!isTable){
+        if(!isTable){ // 노션 테이블 하위 데이터 조회
             res = await notion.databases.query({
                 database_id,
                 filter,
                 sorts,
             })
-        }else {
+        }else { // 노션 테이블의 정보 조회
             res = await notion.databases.retrieve({
                 database_id,
             })
