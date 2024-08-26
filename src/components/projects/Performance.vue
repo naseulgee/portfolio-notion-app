@@ -73,61 +73,42 @@
         </li>
     </ul>
     <!-- Modal -->
-    <div
-        ref="modal"
-        class="modal"
-        @click.self="closeModal">
-        <div class="modal-dialog modal-dialog-scrollable modal-xl">
-            <div class="modal-content">
-                <div class="modal-header p-2">
-                    <h5
-                        ref="modalTitle"
-                        class="modal-title">
-                        Modal title
-                    </h5>
-                    <button
-                        @click="closeModal"
-                        class="btn-close"></button>
-                </div>
-                <div class="modal-body p-2">
-                    <img
-                        ref="modalImg"
-                        class="mb-1"
-                        src=""
-                        alt="" />
-                    <p ref="modalDec"></p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <Modal
+        :modal="modal"
+        @closeModal="closeModal" />
 </template>
 
 <script>
 import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn'
+import Modal from '~/components/common/Modal'
 
 export default {
     components: {
         ArrowBottomBtn,
+        Modal,
     },
     data() {
         return {
+            modal: {
+                on: false,
+                title: '',
+                imgSrc: '',
+                dec: ''
+            }
         }
-    },
-    computed: {
     },
     methods: {
         showModal(event) {
-            this.$refs.modal.classList.toggle('on')
-
             let { target } = event
             if(!target.classList.contains('hover-box')) target = target.closest('.hover-box')
 
-            this.$refs.modalTitle.innerText = target.querySelector('.subtitle')?.innerText.replaceAll('\n', ' ')
-            this.$refs.modalImg.src = target.querySelector('.hover-box-img')?.src
-            this.$refs.modalDec.innerText = target.querySelector('.dec')?.innerText
+            this.modal.on = true
+            this.modal.title = target.querySelector('.subtitle')?.innerText
+            this.modal.imgSrc = target.querySelector('.hover-box-img')?.src
+            this.modal.dec = target.querySelector('.dec')?.innerText
         },
         closeModal() {
-            this.$refs.modal.classList.toggle('on')
+            this.modal.on = false
         }
     },
 }
