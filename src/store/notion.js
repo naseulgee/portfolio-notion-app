@@ -17,6 +17,7 @@ export default {
             addImages : [],
             filterList: [], // 속성 목록
             filters   : [], // 속성 필터링 조건 목록
+            stackList : {},
         }
     },
     // 계산된 데이터. computed와 유사
@@ -27,6 +28,7 @@ export default {
             const { portfolios, filters } = state
             // 선택된 필터링 조건이 없으면 포트폴리오 전체 리스트 전달
             if(!filters || Object.values(filters).join('').length == 0) return portfolios
+            // console.log("filters:::", filters)
 
             const filteredPortfolios = {}
             // NOTE: 필터링 조건이 포폴에 작성값 개수보다 작을 확률이 높음으로 필터조건 -> 포폴속성 순으로 반복
@@ -41,10 +43,13 @@ export default {
 
                     for (let k = 0; k < portfolios.length; k++) {
                         const portfolio = portfolios[k] // 포트폴리오
-                        let select = portfolio.properties[key].multi_select
-                        if(!select) select = portfolio.properties[key].select
-                        const propertiesNameList = select?.name;
-                        // console.log("portfolio:::", propertiesNameList)
+                        const { type, select, multi_select, relation } = portfolio.properties[key]
+                        // console.log("portfolio:::", portfolio, type, select, multi_select, relation)
+
+                        let propertiesNameList = select?.id
+                        if(type == "multi_select") propertiesNameList = multi_select?.map(select => select.id)
+                        if(type == "relation"    ) propertiesNameList = relation?.map(rel => rel.id)
+                        // console.log("propertiesNameList:::", propertiesNameList)
 
                         if(propertiesNameList?.includes(filterString)) {
                             filteredPortfolios[portfolio.id] = portfolio
@@ -77,9 +82,6 @@ export default {
         resetPortfolios(state) {
             state.portfolios = []
             state.loading = false
-        },
-        resetFilters(state) {
-            state.filters = []
         },
         resetAddImages(state) {
             state.addImages = []
@@ -139,32 +141,44 @@ export default {
             if(context.state.filterList.length != 0) return
 
             try {
+                // 일반 필터 조회
                 const res = await _fetchNotion({
                     isTable: true
                 })
                 // console.log("searchFilterList:::res:::", res.data.properties)
 
-                const setfilters = [
-                    '분류',
-                    '담당분야',
-                    'stack-Design',
-                    'stack-Front',
-                    'stack-Back',
-                    'stack-DB',
-                    'stack-Test',
-                    'stack-IDE',
-                    'stack-Server'
-                ]
                 const filterList = Object.values(res.data.properties).filter(pp => {
-                    if(setfilters.includes(pp.name)) return pp
+                    if(pp.name == '분류' || pp.name == '담당분야') return pp
                 })
                 console.log("searchFilterList:::filtered:::", filterList)
+
+                // 참조형 필터 추가(스택)
+                const multiStackList = {}
+                Object.values(context.state.stackList).forEach(stack => {
+                    // multi_select 타입 형식 맞추기
+                    const { type, name } = stack.properties
+                    // 그룹핑
+                    const pid   = type.select.id
+                    const pname = type.select.name
+                    if(!multiStackList[pname]) multiStackList[pname] = { id: pid, name: pname, type: "multi_select", "multi_select": { options: [] } }
+                    // 스택
+                    const { id, icon } = stack
+                    const stackName = name.title[0].plain_text
+                    multiStackList[pname].multi_select.options.push({ id, name: stackName, icon })
+                })
+                console.log("searchFilterList:::multiStackList:::", multiStackList)
+
                 context.commit('updateState', {
-                    filterList
+                    filterList: [
+                        ...filterList,
+                        ...Object.values(multiStackList)
+                    ],
                 })
             } catch (error) {
                 console.log(error)
-                context.commit('resetFilterList')
+                context.commit('updateState', {
+                    filterList: []
+                })
             }
         },
         // 포트폴리오 필터링
@@ -175,15 +189,8 @@ export default {
         },
         // 첨부 이미지 목록 검색
         async searchAddImages(context, payload) {
-            // 로딩 상태일 경우 반복 요청 방지
-            if(context.state.loading) return
-
-            context.commit('updateState', {
-                loading: true,
-            })
-
             try {
-                const { database_id, type } = payload
+                const { database_id } = payload
                 // [참고] https://developers.notion.com/reference/property-object
                 const res = await _fetchNotionAddImages({
                     ...payload,
@@ -192,10 +199,6 @@ export default {
                             {
                                 property: "Project API",
                                 relation: { contains: database_id }
-                            },
-                            {
-                                property: "type",
-                                select: { equals: type }
                             },
                         ]
                     }
@@ -210,7 +213,6 @@ export default {
                             ...el.properties
                         }
                     }),
-                    loading: false,
                 })
             } catch (error) {
                 console.log(error)
@@ -226,6 +228,42 @@ export default {
                 console.log(error)
             }
         },
+        // 스택 목록 검색
+        async searchStackList(context) {
+            // 이미 데이터를 받아온 경우 재요청 방지(자주 안바뀔거라)
+            if(Object.keys(context.state.stackList).length != 0) return
+
+            try {
+                const res = await _fetchNotionStacks({
+                    sorts: [
+                        {
+                            property: 'type',
+                            direction: 'ascending', // descending
+                        },
+                        {
+                            property: 'order',
+                            direction: 'ascending', // descending
+                        },
+                    ],
+                })
+                // console.log("searchFilterList:::res:::", res.data.results)
+
+                const stackList = {}
+                res.data.results.forEach(stack => {
+                    stackList[stack.id] = stack
+                })
+                console.log("searchFilterList:::stackList:::", stackList)
+
+                context.commit('updateState', {
+                    stackList
+                })
+            } catch (error) {
+                console.log(error)
+                context.commit('updateState', {
+                    stackList: {}
+                })
+            }
+        },
     },
 }
 
@@ -238,4 +276,7 @@ async function _fetchNotionAddImages(payload) {
 }
 async function _fetchNotionContact(payload) {
     return await axios.post('/.netlify/functions/notionContact', payload)
+}
+async function _fetchNotionStacks(payload) {
+    return await axios.post('/.netlify/functions/notionStacks', payload)
 }

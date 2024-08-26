@@ -22,8 +22,7 @@
                         v-for="option in filter.multi_select ? filter.multi_select : filter.select"
                         :key="option.id">
                         <span class="filter-title d-inline-block">
-                            <template v-if="filter.name.split('-')[1]">{{ filter.name.split('-')[1] }}</template>
-                            <template v-else>{{ filter.name }}</template>
+                            {{ filter.name }}
                         </span>
                         <template
                             v-for="val in option"
@@ -32,7 +31,7 @@
                                 type="checkbox"
                                 :id="val.id"
                                 class="btn-check"
-                                :value="val.name"
+                                :value="val.id"
                                 @click="search"
                                 v-model="formData[filter.name]" />
                             <label
@@ -67,18 +66,18 @@ export default {
     computed: {
         filterList() {
             const { filterList } = this.$store.state.notion
-            const sortedList = filterList.sort((a, b) => {
-                const sortNumA = a.description;
-                const sortNumB = b.description;
+            // const sortedList = filterList.sort((a, b) => {
+            //     const sortNumA = a.description;
+            //     const sortNumB = b.description;
                 
-                if(sortNumA > sortNumB) return 1;
-                if(sortNumA < sortNumB) return -1;
-                if(sortNumA === sortNumB) return 0;
-            })
-            sortedList.forEach(f => {
+            //     if(sortNumA > sortNumB) return 1;
+            //     if(sortNumA < sortNumB) return -1;
+            //     if(sortNumA === sortNumB) return 0;
+            // })
+            filterList.forEach(f => {
                 this.formData[f.name] = []
             })
-            return sortedList
+            return filterList
         },
         filterH() {
             return this.$refs.filterList.clientHeight
