@@ -20,6 +20,7 @@
 
 <script>
 import LinkBtn from '~/components/common/buttons/LinkBtn'
+
 export default {
     components: {
         LinkBtn,

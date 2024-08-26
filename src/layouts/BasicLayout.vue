@@ -61,8 +61,9 @@ export default {
             })
         },
     },
-    mounted() {
+    created() {
         this.$store.dispatch('notion/searchPortfolios')
+        this.$store.dispatch('notion/searchStackList')
     },
     updated() {
         // slot 에 보여주는 컴포넌트가 바뀔 때 마다 실행

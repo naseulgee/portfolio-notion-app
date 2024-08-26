@@ -1,7 +1,6 @@
 <template>
     <RouterLink
         :to="'/projects/' + portfolio.id"
-        @click="setPortfolio"
         class="portfolio-wrap hover-box text-hover-none">
         <div class="cover w-100 h-100">
             <div
@@ -72,10 +71,5 @@ export default {
             return `rgb(${red}, ${green}, ${blue})`;
         }
     },
-    methods: {
-        setPortfolio() {
-            this.$store.dispatch('notion/searchPortfolio', { portfolio: this.portfolio })
-        }
-    }
 }
 </script>

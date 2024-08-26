@@ -14,20 +14,20 @@ const database_id = process.env.NOTION_DATABASE_ID
 
 exports.handler = async (request, context) => {
     const payload = JSON.parse(request.body)
-    const { filter, sorts, isTable } = payload
+    const { filter, sorts, isTable, id } = payload
     try {
         // [참고] https://developers.notion.com/reference/post-database-query
         const notion = new Client({ auth: process.env.NOTION_KEY })
         let res
-        if(!isTable){ // 노션 테이블 하위 데이터 조회
+        if(isTable){ // 노션 테이블의 정보 조회
+            res = await notion.databases.retrieve({
+                database_id: id ? id : database_id,
+            })
+        } else { // 노션 테이블 하위 데이터 조회
             res = await notion.databases.query({
                 database_id,
                 filter,
                 sorts,
-            })
-        }else { // 노션 테이블의 정보 조회
-            res = await notion.databases.retrieve({
-                database_id,
             })
         }
         return {

@@ -1,16 +1,14 @@
 <template>
     <section
-        v-if="isLoding"
+        v-if="!portfolio"
         class="container vh-min-100">
         <Loader
             position="fixed"
             :size="5" />
     </section>
-    <section
-        v-else
-        @click="showImgs(portfolio.id)">
-        <div>
-            <strong>icon :: </strong>
+    <section v-else>
+        <!-- s: 인트로 -->
+                <div class="cover-img w-100 h-100 position-absolute top-0 left-0">
             <NotionObj
                 :prop="portfolio.icon"
                 dec="icon" />
@@ -252,11 +250,8 @@ export default {
         Loader,
     },
     computed: {
-        isLoding() {
-            return this.$store.state.notion.loading
-        },
         portfolio() {
-            return this.$store.state.notion.portfolio
+            return this.$store.getters['notion/portfolio'](this.$route.params.id)
         },
         pfprop() {
             return this.portfolio.properties
@@ -266,12 +261,15 @@ export default {
         }
     },
     methods: {
-        showImgs(database_id) {
+        showImgs() {
             this.$store.dispatch('notion/searchAddImages', {
-                database_id,
-                type: "usecase"
+                database_id: this.$route.params.id,
+                // type: "usecase"
             })
         },
+    },
+    mounted() {
+        this.showImgs()
     },
 }
 </script>

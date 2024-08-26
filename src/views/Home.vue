@@ -150,7 +150,7 @@ export default {
 <style lang="scss" scoped>
 .work-point-wrap{
     z-index: -1;
-    text-shadow: 0 0 1.5em rgba(var(--bs-dark-rgb), var(--bs-bg-opacity));
+    text-shadow: 0 0 1.5em var(--bs-dark);
     .work-point-inner-wrap{
         height: 200vh;
         .shape-wrap{
