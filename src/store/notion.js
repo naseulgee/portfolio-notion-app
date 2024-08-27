@@ -18,6 +18,7 @@ export default {
             filterList: [], // 속성 목록
             filters   : [], // 속성 필터링 조건 목록
             stackList : {},
+            stackFList: [], // 필터용 스택 목록
         }
     },
     // 계산된 데이터. computed와 유사
@@ -72,6 +73,12 @@ export default {
                     return el
                 }
             }
+        },
+        filterWithStack(state) {
+            return [
+            ...state.filterList,
+            ...state.stackFList,
+            ]
         }
     },
     /** NOTE: state의 데이터를 수정 할 수 있다. (setter)
@@ -152,27 +159,8 @@ export default {
                 })
                 console.log("searchFilterList:::filtered:::", filterList)
 
-                // 참조형 필터 추가(스택)
-                const multiStackList = {}
-                Object.values(context.state.stackList).forEach(stack => {
-                    // multi_select 타입 형식 맞추기
-                    const { type, name } = stack.properties
-                    // 그룹핑
-                    const pid   = type.select.id
-                    const pname = type.select.name
-                    if(!multiStackList[pname]) multiStackList[pname] = { id: pid, name: pname, type: "multi_select", "multi_select": { options: [] } }
-                    // 스택
-                    const { id, icon } = stack
-                    const stackName = name.title[0].plain_text
-                    multiStackList[pname].multi_select.options.push({ id, name: stackName, icon })
-                })
-                console.log("searchFilterList:::multiStackList:::", multiStackList)
-
                 context.commit('updateState', {
-                    filterList: [
-                        ...filterList,
-                        ...Object.values(multiStackList)
-                    ],
+                    filterList
                 })
             } catch (error) {
                 console.log(error)
@@ -231,7 +219,7 @@ export default {
         // 스택 목록 검색
         async searchStackList(context) {
             // 이미 데이터를 받아온 경우 재요청 방지(자주 안바뀔거라)
-            if(Object.keys(context.state.stackList).length != 0) return
+            if(context.state.stackFList.length != 0) return
 
             try {
                 const res = await _fetchNotionStacks({
@@ -246,21 +234,36 @@ export default {
                         },
                     ],
                 })
-                // console.log("searchFilterList:::res:::", res.data.results)
+                // console.log("searchStackList:::res:::", res.data.results)
 
                 const stackList = {}
+                const multiStackList = {} // 참조형 필터 추가(스택)
                 res.data.results.forEach(stack => {
                     stackList[stack.id] = stack
+
+                    // multi_select 타입 형식 맞추기
+                    const { type, name } = stack.properties
+                    // 그룹핑
+                    const pid   = type.select.id
+                    const pname = type.select.name
+                    if(!multiStackList[pname]) multiStackList[pname] = { id: pid, name: pname, type: "multi_select", "multi_select": { options: [] } }
+                    // 스택
+                    const { id, icon } = stack
+                    const stackName = name.title[0].plain_text
+                    multiStackList[pname].multi_select.options.push({ id, name: stackName, icon })
                 })
-                console.log("searchFilterList:::stackList:::", stackList)
+                console.log("searchStackList:::stackList:::", stackList)
+                console.log("searchStackList:::multiStackList:::", multiStackList)
 
                 context.commit('updateState', {
-                    stackList
+                    stackList,
+                    stackFList: Object.values(multiStackList)
                 })
             } catch (error) {
                 console.log(error)
                 context.commit('updateState', {
-                    stackList: {}
+                    stackList: {},
+                    stackFList: []
                 })
             }
         },

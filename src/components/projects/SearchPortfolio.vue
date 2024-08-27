@@ -65,7 +65,7 @@ export default {
     },
     computed: {
         filterList() {
-            const { filterList } = this.$store.state.notion
+            const filterList = this.$store.getters['notion/filterWithStack']
             // const sortedList = filterList.sort((a, b) => {
             //     const sortNumA = a.description;
             //     const sortNumB = b.description;
