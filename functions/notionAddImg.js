@@ -5,12 +5,13 @@ const database_id = process.env.NOTION_IMG_DATABASE_ID
 
 exports.handler = async (request, context) => {
     const payload = JSON.parse(request.body)
-    const { filter } = payload
+    const { filter, sorts } = payload
     try {
         const notion = new Client({ auth: process.env.NOTION_KEY })
         let res = await notion.databases.query({
             database_id,
-            filter
+            filter,
+            sorts,
         })
         return {
             statusCode: 200,

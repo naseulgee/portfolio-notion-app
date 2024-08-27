@@ -143,9 +143,10 @@
 
         <!-- s: 배너 이미지 -->
         <section
-            class="point-bg w-100 bg-dark"
+            v-if="addImg.point"
+            class="point-bg cover w-100 position-relative"
+            :style="{ background: `url(${addImg.point.url}) center/cover no-repeat fixed` }"
             data-them="dark">
-            img
         </section>
         <!-- e: 배너 이미지 -->
 

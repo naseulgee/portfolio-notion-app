@@ -14,7 +14,7 @@ export default {
         return {
             loading   : false,
             portfolios: [],
-            addImages : [],
+            addImages : {},
             filterList: [], // 속성 목록
             filters   : [], // 속성 필터링 조건 목록
             stackList : {},
@@ -91,7 +91,7 @@ export default {
             state.loading = false
         },
         resetAddImages(state) {
-            state.addImages = []
+            state.addImages = {}
             state.loading = false
         },
         updateState(state, payload) {
@@ -176,35 +176,50 @@ export default {
             })
         },
         // 첨부 이미지 목록 검색
-        async searchAddImages(context, payload) {
+        async searchAddImages({ commit }, payload) {
             try {
                 const { database_id } = payload
                 // [참고] https://developers.notion.com/reference/property-object
                 const res = await _fetchNotionAddImages({
                     ...payload,
                     filter: {
-                        and: [
-                            {
-                                property: "Project API",
-                                relation: { contains: database_id }
-                            },
-                        ]
-                    }
+                        property: "Project API",
+                        relation: { contains: database_id }
+                    },
+                    sorts: [
+                        {
+                            property: 'pagetype',
+                            direction: 'ascending', // descending
+                        },
+                    ],
                 })
-                console.log("searchAddImages:::", res.data)
+                // console.log("searchAddImages:::", res.data)
 
-                context.commit('updateState', {
+                const imgList = {}
+                res.data.results.forEach(el => {
+                    const { type, img, pagedec, pagetype, point } = el.properties
+                    const typeName = type.select.name
+                    const url = img.files[0].file.url
+                    const imgName = img.files[0].name
+                    const pagedecText = pagedec.rich_text[0]?.plain_text
+
+                    if(!imgList[typeName] || imgList[typeName].length == 0) imgList[typeName] = []
+                    imgList[typeName].push({
+                        url,
+                        pagedec: pagedecText ? pagedecText : imgName,
+                        pagetype: pagetype.select?.name,
+                    })
+                    if(point.checkbox) imgList.point = { url, pagedec: imgName }
+                })
+                console.log("searchAddImages:::imgList:::", imgList)
+
+                commit('updateState', {
                     // 갱신할 데이터 : 전달할 데이터
-                    addImages: res.data.results.map(el => {
-                        return {
-                            id: el.id,
-                            ...el.properties
-                        }
-                    }),
+                    addImages: imgList,
                 })
             } catch (error) {
                 console.log(error)
-                context.commit('resetAddImages')
+                commit('resetAddImages')
             }
         },
         // 문의 등록
