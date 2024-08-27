@@ -26,6 +26,7 @@ $font-weight-bolder:     900;
 $link-color: $gray-900;
 $link-hover-color: $primary;
 
+$enable-negative-margins: true;
 $spacer: 50px;
 
 $transition-base: all .5s ease-in-out;
@@ -88,6 +89,7 @@ img {
     text-decoration: none;
     transition: $transition-base;
     z-index: 1;
+    cursor: pointer;
     &::before{ /* + MORE 버튼 */
         content: '+\AMORE';
         display: flex;
