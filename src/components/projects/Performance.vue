@@ -72,44 +72,26 @@
             </div>
         </li>
     </ul>
-    <!-- Modal -->
-    <Modal
-        :modal="modal"
-        @closeModal="closeModal" />
 </template>
 
 <script>
 import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn'
-import Modal from '~/components/common/Modal'
 
 export default {
     components: {
         ArrowBottomBtn,
-        Modal,
-    },
-    data() {
-        return {
-            modal: {
-                on: false,
-                title: '',
-                imgSrc: '',
-                dec: ''
-            }
-        }
     },
     methods: {
         showModal(event) {
             let { target } = event
             if(!target.classList.contains('hover-box')) target = target.closest('.hover-box')
 
-            this.modal.on = true
-            this.modal.title = target.querySelector('.subtitle')?.innerText
-            this.modal.imgSrc = target.querySelector('.hover-box-img')?.src
-            this.modal.dec = target.querySelector('.dec')?.innerText
+            this.$store.dispatch('modal/showModal', {
+                title : target.querySelector('.subtitle')?.innerText,
+                imgSrc : target.querySelector('.hover-box-img')?.src,
+                dec : target.querySelector('.dec')?.innerText,
+            })
         },
-        closeModal() {
-            this.modal.on = false
-        }
     },
 }
 </script>

@@ -5,6 +5,7 @@
 import { createStore } from 'vuex'
 import notion from './notion'
 import about from './about'
+import modal from './modal'
 import slogans from './slogans'
 import themeColor from './themeColor'
 
@@ -13,6 +14,7 @@ export default createStore({
     modules: {
         notion,
         about,
+        modal,
         slogans,
         themeColor,
     }
