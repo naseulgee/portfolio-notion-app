@@ -7,6 +7,8 @@
     </section>
     <!-- e: 인트로 -->
 
+    <SloganSlide next="About Me" />
+    
     <!-- s: 작업 포인트 -->
     <section
         class="work-point-wrap container w-100 py-5 text-center"
@@ -16,8 +18,6 @@
     </section>
     <!-- e: 작업 포인트 -->
 
-    <SloganSlide next="About Me" />
-
     <!-- s: 스킬목록 -->
     <section
         class="py-5 overflow-hidden bg-dark text-white"
@@ -26,15 +26,20 @@
     </section>
     <!-- e: 스킬목록 -->
 
-    <!-- s: 경력 -->
-    <section data-them="white"></section>
-    <!-- e: 경력 -->
-
-    <!-- s: 그 외 -->
-    <section data-them="white"></section>
-    <!-- e: 그 외 -->
-
-    <SloganSlide />
+    <!-- s: 풋터 슬로건 -->
+    <section class="overflow-hidden">
+        <RouterLink
+            class="text-hover-none text-decoration-none"
+            to="/projects">
+            <div class="container mt-5">
+                <ArrowBottomBtn>
+                    Projects
+                </ArrowBottomBtn>
+            </div>
+            <SloganSlide />
+        </RouterLink>
+    </section>
+    <!-- e: 풋터 슬로건 -->
 </template>
 
 <script>
