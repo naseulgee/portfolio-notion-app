@@ -59,7 +59,8 @@ export default {
         },
     },
     methods: {
-        initObserver(targets){
+        initObserver(){
+            const targets = document.querySelectorAll('.floating-wrap')
             // 전달 대상이 없을 경우 함수 종료
             if(!targets || targets.length == 0) return
 
@@ -70,7 +71,8 @@ export default {
                 this.observer.observe(target);
             })
         },
-        unObserve(targets) {
+        unObserve() {
+            const targets = document.querySelectorAll('.floating-wrap')
             if(!this.observer) return
             targets.forEach(target => {
                 this.observer.unobserve(target);
@@ -101,10 +103,14 @@ export default {
         },
     },
     mounted() {
-        this.initObserver(document.querySelectorAll('.floating-wrap'))
+        this.initObserver()
+    },
+    updated() { // 새로고침 대비
+        this.unObserve()
+        this.initObserver()
     },
     beforeUnmount() {
-        this.unObserve(document.querySelectorAll('.floating-wrap'));
+        this.unObserve()
     }
 }
 </script>
