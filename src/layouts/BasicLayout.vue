@@ -1,4 +1,7 @@
 <template>
+    <Loading
+        v-if="isLoading"
+        :time="loadingOffTime" />
     <MainHeader />
 
     <main>
@@ -11,12 +14,14 @@
 </template>
 
 <script>
+import Loading from "~/views/Loading"
 import MainHeader from "~/components/common/Header"
 import MainFooter from "~/components/common/Footer"
 import Modal from '~/components/common/Modal'
 
 export default {
     components: {
+        Loading,
         MainHeader,
         MainFooter,
         Modal,
@@ -28,7 +33,13 @@ export default {
                 root: null,
                 threshold: [0, 1],
             },
+            loadingOffTime: 5, // s
         }
+    },
+    computed: {
+        isLoading() {
+            return this.$store.state.loadingPage.isLoading
+        },
     },
     methods: {
         initObserver(targets){
@@ -65,11 +76,21 @@ export default {
         },
     },
     created() {
+        // 필요한 데이터 다 가져오기
         this.$store.dispatch('notion/searchPortfolios')
+        this.$store.dispatch('notion/searchFilterList')
         this.$store.dispatch('notion/searchStackList')
     },
-    updated() {
+    async mounted() {
+        await this.$nextTick() // DOM load 후
+        // 5초 뒤 로딩화면 종료
+        setTimeout(() => {
+            this.$store.dispatch('loadingPage/changeLoading', { isLoading: false })
+        }, this.loadingOffTime * 1000)
+    },
+    async updated() {
         // slot 에 보여주는 컴포넌트가 바뀔 때 마다 실행
+        await this.$nextTick() // DOM load 후
         this.initObserver(document.querySelectorAll('[data-them]'))
     },
 }

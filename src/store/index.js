@@ -8,6 +8,7 @@ import about from './about'
 import modal from './modal'
 import slogans from './slogans'
 import themeColor from './themeColor'
+import loadingPage from './loadingPage'
 
 export default createStore({
     // 상태를 관리하는 파일을 따로 생성하고 해당 파일에 모듈로 등록한다
@@ -17,5 +18,6 @@ export default createStore({
         modal,
         slogans,
         themeColor,
+        loadingPage,
     }
 })

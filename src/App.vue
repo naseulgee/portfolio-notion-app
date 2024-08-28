@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import BasicLayout from "~/layouts/BasicLayout";
+import BasicLayout from "~/layouts/BasicLayout"
 
 export default {
     components: {

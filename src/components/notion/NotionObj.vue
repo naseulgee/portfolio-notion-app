@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import Loader from '~/components/common/Loader'
+import Loader from '~/components/common/progress/Loader'
 
 /** NOTE: 실행 순서
  * 템플릿에 출력할 태그 타입 분류

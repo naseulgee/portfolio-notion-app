@@ -417,7 +417,7 @@
 
 <script>
 import NotionObj from '~/components/notion/NotionObj'
-import Loader from '~/components/common/Loader'
+import Loader from '~/components/common/progress/Loader'
 import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn'
 import LinkBtn from '~/components/common/buttons/LinkBtn'
 import ProgressCircle from '~/components/common/progress/ProgressCircle'

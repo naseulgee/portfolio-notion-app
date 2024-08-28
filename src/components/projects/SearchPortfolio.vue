@@ -104,9 +104,6 @@ export default {
             }
         }
     },
-    mounted() {
-        this.$store.dispatch('notion/searchFilterList')
-    }
 }
 </script>
 
