@@ -1,11 +1,15 @@
 <template>
     <!-- s: intro -->
-    <section class="container py-5">
+    <section
+        class="container py-5"
+        data-them="white">
         <Intro />
     </section>
     <!-- e: intro -->
     <!-- s: 문의 -->
-    <section class="container my-4">
+    <section
+        class="container my-4"
+        data-them="white">
         <ContactForm class="mb-5" />
         <!-- s: 연락처 리스트 -->
         <ContactList />
@@ -13,7 +17,9 @@
     </section>
     <!-- e: 문의 -->
     <!-- s: 풋터 슬로건 -->
-    <section class="overflow-hidden">
+    <section
+        class="overflow-hidden"
+        data-them="white">
         <RouterLink
             class="text-hover-none text-decoration-none"
             to="/about-me">

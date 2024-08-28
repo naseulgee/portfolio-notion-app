@@ -7,7 +7,9 @@
     </section>
     <!-- e: 인트로 -->
 
-    <SloganSlide next="About Me" />
+    <SloganSlide
+        next="About Me"
+        data-them="white" />
     
     <!-- s: 작업 포인트 -->
     <section

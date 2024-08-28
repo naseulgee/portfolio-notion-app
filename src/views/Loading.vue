@@ -87,6 +87,7 @@ $zoom: 180px;
 
 .slots-wrapper{
     z-index: 100;
+    word-break: keep-all;
     .outer-screen{
         // 뷰포트 + translateZ 에 따른 계산 + blur 번짐에 따른 여백
         width: calc($screenW + 11vw + 3px);

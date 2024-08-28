@@ -48,6 +48,11 @@
                 </li>
             </ul>
         </nav>
+        <button
+            @click="goTop"
+            class="btn btn-outline-primary position-fixed bottom-0 end-0 m-2">
+            <font-awesome-icon icon="fa-solid fa-chevron-up" />
+        </button>
     </header>
 </template>
 
@@ -117,6 +122,9 @@ export default {
         },
         toggleThem() {
             this.$store.dispatch('themeColor/setThemeColor', {isDark: !this.$store.state.themeColor.isDark})
+        },
+        goTop() {
+            window.scrollTo(0, 0)
         }
     },
 }

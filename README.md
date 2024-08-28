@@ -14,6 +14,7 @@
 + 참여 프로젝트 시각적 기록
 
 ### 기록
++ slot의 화면 로딩은 nextTick 이 감지하지 못한다(24/08/29)
 + 로딩화면의 스크롤 관리(24/08/28): create 시 js로 head에 style 시트 추가, unmount 시 삭제. => 전역 css 사용 시 컴포넌트 해제 후에도 스크롤이 사라져있음
 + 로딩화면 순서(24/08/28): ~~App created(store 연결 시점이나 비슷.. 차라리 초기값을 true)~~ + ~~before Router(너무 짜증)~~ (생성) -> Layout updated(소멸) => store로 상태 관리 필요
 + 호출 순서(24/08/28): App created -> Layout created -> App nextTick 이후 실행 -> before Router -> after Router -> Layout updated
