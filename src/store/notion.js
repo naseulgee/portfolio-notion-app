@@ -257,15 +257,17 @@ export default {
                     stackList[stack.id] = stack
 
                     // multi_select 타입 형식 맞추기
-                    const { type, name } = stack.properties
+                    const { type, name, hide } = stack.properties
                     // 그룹핑
                     const pid   = type.select.id
                     const pname = type.select.name
+                    // 그룹핑 객체가 없으면 생성
                     if(!multiStackList[pname]) multiStackList[pname] = { id: pid, name: pname, type: "multi_select", "multi_select": { options: [] } }
+
                     // 스택
                     const { id, icon } = stack
                     const stackName = name.title[0].plain_text
-                    multiStackList[pname].multi_select.options.push({ id, name: stackName, icon })
+                    multiStackList[pname].multi_select.options.push({ id, name: stackName, icon, hide: hide.checkbox })
                 })
                 console.log("searchStackList:::stackList:::", stackList)
                 console.log("searchStackList:::multiStackList:::", multiStackList)

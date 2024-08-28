@@ -1,23 +1,24 @@
 <template>
     <ul class="container">
-        <template
-            v-for="i in limitCnt"
-            :key="i">
-            <!-- 묶음처리 -->
-            <li
-                v-if="(i - 1) % 2 == 0"
-                class="floating-wrap d-flex flex-wrap flex-md-nowrap justify-content-between align-items-end mb-2 mb-md-5"
-                :data-num="i">
-                <FloatingImg
-                    v-if="imgList[(i - 1)]"
-                    :is-small="(i - 1) % 4 == 0"
-                    :img-obj="imgList[(i - 1)]" />
-                <FloatingImg
-                    v-if="imgList[i]"
-                    :is-small="(i - 1) % 4 != 0"
-                    :img-obj="imgList[i]" />
-            </li>
-        </template>
+        <slot>
+            <template
+                v-for="i in limitCnt"
+                :key="i">
+                <!-- 묶음처리 -->
+                <li
+                    v-if="(i - 1) % 2 == 0"
+                    class="floating-wrap d-flex flex-wrap flex-md-nowrap justify-content-between align-items-end mb-2 mb-md-5">
+                    <FloatingImg
+                        v-if="imgList[(i - 1)]"
+                        :is-small="(i - 1) % 4 == 0"
+                        :img-obj="imgList[(i - 1)]" />
+                    <FloatingImg
+                        v-if="imgList[i]"
+                        :is-small="(i - 1) % 4 != 0"
+                        :img-obj="imgList[i]" />
+                </li>
+            </template>
+        </slot>
     </ul>
 </template>
 
@@ -25,6 +26,9 @@
 import FloatingImg from '~/components/common/FloatingImg'
 
 export default {
+    emits: [
+        'obCallback'
+    ],
     props: {
         limit: {
             type: Number,
@@ -76,13 +80,13 @@ export default {
             entries.forEach(entry => {
                 const { target, isIntersecting } = entry
                 const isShow   = isIntersecting // 화면에 보이는지
-
+                
                 if(isShow) {
                     const { height, top } = target.getBoundingClientRect()
                     const smallChild = target.querySelector('.small-box')
-
+                    
                     // console.log(target, smallChild)
-                    if(smallChild) {
+                    if(smallChild) { // 작은 박스 스크롤에 따라 움직이기
                         const space = height - smallChild.clientHeight
                         let move = (height - top) * 0.5
                         if(move > space) move = space
@@ -90,7 +94,9 @@ export default {
 
                         smallChild.style.transform = `translateY(${ -move }px)`
                     }
+
                 }
+                this.$emit('obCallback', target, isShow) // 그 외 전달받은 콜백함수 실행
             })
         },
     },

@@ -69,10 +69,10 @@ export default {
     },
     computed: {
         randomColor() {
-            const red = Math.floor(Math.random() * 256);
-            const green = Math.floor(Math.random() * 256);
-            const blue = Math.floor(Math.random() * 256);
-            return `rgb(${red}, ${green}, ${blue})`;
+            const red = Math.floor(Math.random() * 256)
+            const green = Math.floor(Math.random() * 256)
+            const blue = Math.floor(Math.random() * 256)
+            return `rgb(${red}, ${green}, ${blue})`
         }
     },
     methods: {
@@ -102,7 +102,7 @@ export default {
         width: var(--width);
         height: calc(var(--width) * 3 * 0.5);
         font-size: 1.5rem;
-        &.small-box{ // 큰 사이즈
+        &.small-box{ // 작은 사이즈
             --width: #{'min(400px, (40vw - ' + $spacer + '))'};
             font-size: 1rem;
         }
@@ -113,7 +113,7 @@ export default {
     .floating-box{
         &.hover-box{
             --width: #{'calc(500px - ' + $spacer + ')'};
-            &.small-box{ // 큰 사이즈
+            &.small-box{ // 작은 사이즈
                 --width: #{'calc(300px - ' + $spacer + ')'};
             }
         }
@@ -127,7 +127,7 @@ export default {
             height: calc(var(--width) * 1.3);
             transform: none !important;
             font-size: 1em;
-            &.small-box{ // 큰 사이즈
+            &.small-box{ // 작은 사이즈
                 --width: #{'calc(100vw - ' + $spacer * 0.5 + ')'};
                 font-size: 1em;
             }
