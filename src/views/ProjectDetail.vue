@@ -268,10 +268,12 @@
 
         <!-- s: WBS -->
         <section
-            v-if="workday > 1"
+            v-if="isExWbs || isExUrl"
             class="wbs py-5 bg-dark text-white"
             data-them="dark">
-            <article class="container">
+            <article
+                v-if="isExWbs"
+                class="container">
                 <h3>
                     WBS
                     <small class="fs-6">
@@ -281,6 +283,7 @@
                             dec="기간" />
                     </small>
                 </h3>
+                <!-- WBS 일정표 -->
                 <div
                     class="d-grid text-nowrap"
                     :style="{
@@ -290,6 +293,7 @@
                     <template
                         v-for="(wbs, i) in wbsList"
                         :key="i">
+                        <!-- 계획별 일정 하이라이트 -->
                         <div
                             v-if="pfprop['wbs-'+ wbs].date"
                             class="item position-relative bg-primary"
@@ -300,6 +304,7 @@
                                 ${getTerm(pfprop['기간'].date.start, pfprop['wbs-'+ wbs].date) + 1}`,
                                 'grid-row': `${i + 1} / ${i + 2}`
                             }">
+                            <!-- 계획별 일정 표시 -->
                             <span
                                 v-if="getTerm(pfprop['기간'].date.start, pfprop['wbs-'+ wbs].date) + 1 < (workday / 2)"
                                 class="mx-1 position-absolute top-50 start-100 translate-middle-y">
@@ -322,7 +327,9 @@
                     </template>
                 </div>
             </article>
-            <article class="container">
+            <article
+                v-if="isExUrl"
+                class="container">
                 <h4 class="mt-4 fs-5">
                     <font-awesome-icon icon="fa-solid fa-angles-right" />
                     Detail URLs
@@ -454,6 +461,20 @@ export default {
         },
         stackList() {
             return this.$store.state.notion.stackList
+        },
+        isExWbs() {
+            let flag = false
+            this.wbsList.forEach(wbs => {
+                if(this.pfprop['wbs-'+ wbs].date) flag = true
+            })
+            return flag
+        },
+        isExUrl() {
+            let flag = false
+            this.urlList.forEach(url => {
+                if(this.pfprop[url].url) flag = true
+            })
+            return flag
         },
         addImg() {
             return this.$store.state.notion.addImages
