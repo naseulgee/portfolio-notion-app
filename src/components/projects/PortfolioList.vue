@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import FloatingWrap from '~/components/common/FloatingWrap'
+import FloatingWrap from '~/components/common/floating/FloatingWrap'
 
 export default {
     components: {

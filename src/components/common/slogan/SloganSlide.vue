@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Slogan from "~/components/common/Slogan"
+import Slogan from "~/components/common/slogan/Slogan"
 
 export default {
     components: {

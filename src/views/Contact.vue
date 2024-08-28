@@ -30,7 +30,7 @@
 
 <script>
 import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn'
-import SloganSlide from '~/components/common/SloganSlide'
+import SloganSlide from '~/components/common/slogan/SloganSlide'
 import Intro from '~/components/contact/Intro'
 import ContactForm from '~/components/contact/ContactForm'
 import ContactList from '~/components/contact/ContactList'

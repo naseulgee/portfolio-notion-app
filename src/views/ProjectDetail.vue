@@ -1,10 +1,19 @@
 <template>
     <section
         v-if="!portfolio"
-        class="container vh-min-100">
+        class="skeletons w-100 vh-100">
         <Loader
             position="fixed"
             :size="5" />
+        <div class="container d-flex flex-column align-content-start justify-content-center w-100 h-100 py-5 py-md-4">
+            <div class="skeleton label mb-4"></div>
+            <div class="skeleton title mb-2"></div>
+            <div class="skeleton dec"></div>
+            <ul class="d-flex mt-5 mb-0 p-0">
+                <li class="skeleton label"></li>
+                <li class="skeleton label "></li>
+            </ul>
+        </div>
     </section>
     <section v-else>
         <!-- s: 인트로 -->
@@ -357,7 +366,9 @@
         <!-- e: WBS -->
 
         <!-- s: 성장 포인트 -->
-        <section class="point py-5 bg-dark text-white">
+        <section
+            class="point py-5 bg-dark text-white"
+            data-them="dark">
             <article class="container">
                 <div class="point-wrap">
                     <h2>Step up</h2>
@@ -376,7 +387,8 @@
         <!-- s: 화면 이미지 -->
         <section
             v-if="addImg.page"
-            class="page-img-wrap">
+            class="page-img-wrap"
+            data-them="white">
             <div class="container my-5">
                 <h2 class="mb-4">
                     Preview
@@ -408,9 +420,9 @@ import NotionObj from '~/components/notion/NotionObj'
 import Loader from '~/components/common/Loader'
 import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn'
 import LinkBtn from '~/components/common/buttons/LinkBtn'
-import ProgressCircle from '~/components/common/ProgressCircle'
-import FloatingWrap from '~/components/common/FloatingWrap'
-import SloganSlide from '~/components/common/SloganSlide'
+import ProgressCircle from '~/components/common/progress/ProgressCircle'
+import FloatingWrap from '~/components/common/floating/FloatingWrap'
+import SloganSlide from '~/components/common/slogan/SloganSlide'
 
 export default {
     components: {
@@ -524,6 +536,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.skeletons{
+    .skeleton{
+        width: 500px;
+        height: 50px;
+        max-width: 100%;
+        border-radius: $border-radius;
+        background-color: $gray-200;
+        &.title{
+            width: 600px;
+            height: 200px;
+        }
+        &.label{
+            width: 100px;
+            margin-right: $spacer * 0.5;
+        }
+        &.dec{
+            width: 900px;
+        }
+    }
+}
 .cover{
     &::before{
         content: '';

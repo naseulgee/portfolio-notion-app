@@ -22,7 +22,7 @@
 
 <script>
 import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn'
-import SloganSlide from '~/components/common/SloganSlide'
+import SloganSlide from '~/components/common/slogan/SloganSlide'
 
 export default {
     components: {

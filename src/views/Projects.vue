@@ -40,7 +40,7 @@ import Intro from '~/components/projects/Intro'
 import SearchPortfolio from '~/components/projects/SearchPortfolio'
 import PortfolioList from '~/components/projects/PortfolioList'
 import Performance from '~/components/projects/Performance'
-import SloganSlide from '~/components/common/SloganSlide'
+import SloganSlide from '~/components/common/slogan/SloganSlide'
 import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn'
 
 export default {

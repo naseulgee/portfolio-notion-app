@@ -47,8 +47,7 @@ import Intro from '~/components/about/Intro'
 import WorkPointIntro from '~/components/about/WorkPointIntro'
 import WorkPointList from '~/components/about/WorkPointList'
 import SkilList from '~/components/about/SkilList'
-import SloganSlide from '~/components/common/SloganSlide'
-import LinkBtn from '~/components/common/buttons/LinkBtn'
+import SloganSlide from '~/components/common/slogan/SloganSlide'
 import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn'
 
 export default {
@@ -58,7 +57,6 @@ export default {
         WorkPointList,
         SkilList,
         SloganSlide,
-        LinkBtn,
         ArrowBottomBtn,
     },
     data() {
@@ -67,7 +65,6 @@ export default {
                 containerClass: [
                     'd-flex',
                     'flex-column',
-                    // 'flex-wrap',
                     'justify-content-center',
                     'align-items-start',
                     'min-vh-100',
@@ -85,7 +82,6 @@ export default {
                 decClass: [
                     'mt-4',
                     'w-50',
-                    // 'w-md-100',
                     'ms-md-auto',
                 ],
             },

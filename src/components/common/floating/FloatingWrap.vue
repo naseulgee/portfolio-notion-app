@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import FloatingImg from '~/components/common/FloatingImg'
+import FloatingImg from '~/components/common/floating/FloatingImg'
 
 export default {
     emits: [
