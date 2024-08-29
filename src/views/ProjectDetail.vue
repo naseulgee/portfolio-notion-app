@@ -71,7 +71,7 @@
                             </LinkBtn>
                         </li>
                     </ul>
-                    <div class="logo mb-n4 mb-md-n3 me-2 position-absolute bottom-0 end-0">
+                    <div class="logo mb-n4 mb-md-n3 me-2 rounded overflow-hidden position-absolute bottom-0 end-0">
                         <NotionObj
                             :prop="portfolio.icon"
                             dec="icon" />
