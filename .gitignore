@@ -3,6 +3,7 @@
 node_modules
 /dist
 .idx
+/00_plan
 
 
 # local env files
