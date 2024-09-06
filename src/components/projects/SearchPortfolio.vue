@@ -104,6 +104,12 @@ export default {
             }
         }
     },
+    unmounted() {
+        // 필터 초기화
+        this.$store.dispatch('notion/setFilters', {
+            filters: {}
+        })
+    },
 }
 </script>
 

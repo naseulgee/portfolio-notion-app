@@ -16,7 +16,7 @@ export default {
             portfolios: [],
             addImages : {},
             filterList: [], // 속성 목록
-            filters   : [], // 속성 필터링 조건 목록
+            filters   : {}, // 속성 필터링 조건 목록
             stackList : {},
             stackFList: [], // 필터용 스택 목록
         }
