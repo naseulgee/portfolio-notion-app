@@ -201,7 +201,7 @@
 
         <!-- s: 구조 이미지 -->
         <section
-            v-if="addImg.usecase?.length + addImg.erd?.length + addImg.pjtstruc?.length > 0"
+            v-if="isExStrucImg"
             class="slide mt-5 position-relative"
             data-them="dark"
             @click="$refs.drag.$el.remove()"
@@ -210,7 +210,7 @@
                 ref="drag"
                 class="position-absolute top-50 start-50 z-2 translate-middle fs-1 text-primary fa-beat-fade"
                 icon="fa-solid fa-arrow-right-arrow-left" />
-            <ul class="d-flex px-2 pb-3">
+            <ul class="d-flex mx-auto px-2 pb-3">
                 <!-- Usecase -->
                 <li
                     v-for="img in addImg.usecase"
@@ -491,6 +491,13 @@ export default {
         addImg() {
             return this.$store.state.notion.addImages
         },
+        isExStrucImg() {
+            const { usecase, erd, pjtstruc } = this.addImg
+            const erdCnt      = erd      ? erd.length : 0
+            const usecaseCnt  = usecase  ? usecase.length : 0
+            const pjtstrucCnt = pjtstruc ? pjtstruc.length : 0
+            return usecaseCnt + erdCnt + pjtstrucCnt > 0
+        },
         pageImgList() {
             return this.addImg.page.map(img => {
                 return {
@@ -613,7 +620,9 @@ export default {
 .slide{
     ul{
         gap: $spacer * 0.5;
-        overflow-x: scroll;
+        width: fit-content;
+        max-width: 100%;
+        overflow-x: auto;
         .hover-box{
             flex-shrink: 0;
             width: 500px;
