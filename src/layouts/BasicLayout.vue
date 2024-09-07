@@ -33,7 +33,7 @@ export default {
                 root: null,
                 threshold: [0, 1],
             },
-            loadingOffTime: 5, // s
+            loadingOffTime: 2, // s
         }
     },
     computed: {

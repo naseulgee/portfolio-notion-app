@@ -4,8 +4,7 @@
         @wheel.prevent
         @touchmove.prevent
         @scroll.prevent
-        class="slots-wrapper d-flex justify-content-center align-items-center w-100 vh-100 overflow-hidden position-fixed top-0 start-0 bg-dark text-white"
-        :style="{ '--time': time * 0.6 + 's' }">
+        class="slots-wrapper d-flex justify-content-center align-items-center w-100 vh-100 overflow-hidden position-fixed top-0 start-0 bg-dark text-white">
         <div class="outer-screen overflow-hidden">
             <div class="slots position-relative">
                 <div class="inner-screen"></div>
@@ -21,6 +20,7 @@
         <ProgreeBar
             class="mb-1 position-fixed bottom-0 start-50 translate-middle-x"
             :time="time"
+            show-time
             color="var(--bs-white)" />
     </section>
 </template>
@@ -75,6 +75,7 @@ export default {
 $screenW: 50vw;
 $screenH: 50vh;
 $zoom: 180px;
+$time: 3.5s;
 
 @keyframes rotate-axis {
     0%   { transform: perspective(1000px) rotateX(0deg);   }
@@ -99,7 +100,7 @@ $zoom: 180px;
             height: 100px;
             top: calc(50% - 50px);
             left: calc(50% - 50px);
-            animation: rotate-axis var(--time) linear infinite;
+            animation: rotate-axis $time linear infinite;
             transform-style: preserve-3d;
             .inner-screen{ // 집중을 위한 블러 처리
                 width: $screenW;
@@ -108,7 +109,7 @@ $zoom: 180px;
                 top: 50%;
                 left: 50%;
                 backdrop-filter: blur(10px);
-                animation: rotate-axis-reverse var(--time) linear infinite;
+                animation: rotate-axis-reverse $time linear infinite;
             }
             .slot{
                 height: 175px;
