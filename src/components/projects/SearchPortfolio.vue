@@ -38,6 +38,11 @@
                                 class="btn btn-outline-primary btn-sm me-1"
                                 :for="val.id">
                                 <NotionObj :prop="{ type: 'rich_text', rich_text: [{plain_text: val.name}] }" />
+                                <small
+                                    v-if="val.relatedCnt > 0"
+                                    class="opacity-50">
+                                    ({{ val.relatedCnt }})
+                                </small>
                             </label>
                         </template>
                     </li>

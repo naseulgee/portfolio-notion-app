@@ -267,7 +267,14 @@ export default {
                     // 스택
                     const { id, icon } = stack
                     const stackName = name.title[0].plain_text
-                    multiStackList[pname].multi_select.options.push({ id, name: stackName, icon, hide: hide.checkbox })
+                    // 관련 프로젝트 개수 세팅
+                    let relatedCnt = 0
+                    Object.values(stack.properties).forEach(pp => {
+                        if(pp.type == "relation") relatedCnt += pp.relation.length
+                    })
+
+                    // 실제 값 넣기
+                    multiStackList[pname].multi_select.options.push({ id, name: stackName, icon, hide: hide.checkbox, relatedCnt })
                 })
                 console.log("searchStackList:::stackList:::", stackList)
                 console.log("searchStackList:::multiStackList:::", multiStackList)
