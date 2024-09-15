@@ -22,10 +22,9 @@
                             v-for="el in stackList[(i - 1)].options"
                             :key="el.id"
                             class="mw-100">
-                            <img
-                                class="icon"
-                                :src="el.icon.file.url"
-                                alt="icon" />
+                            <div class="icon">
+                                <NotionObj :prop="el.icon" />
+                            </div>
                             <br />
                             {{ el.name.split(' ')[0] }}
                             <template v-if="el.name.split(' ')[1]">
@@ -48,10 +47,9 @@
                             v-for="el in stackList[i].options"
                             :key="el.id"
                             class="mw-100">
-                            <img
-                                class="icon"
-                                :src="el.icon.file.url"
-                                alt="icon" />
+                            <div class="icon">
+                                <NotionObj :prop="el.icon" />
+                            </div>
                             <br />
                             {{ el.name.split(' ')[0] }}
                             <template v-if="el.name.split(' ')[1]">
@@ -68,10 +66,12 @@
 
 <script>
 import FloatingWrap from '~/components/common/floating/FloatingWrap'
+import NotionObj from '~/components/notion/NotionObj.vue';
 
 export default {
     components: {
-        FloatingWrap
+        FloatingWrap,
+        NotionObj,
     },
     data() {
         return {
@@ -131,6 +131,8 @@ export default {
                 font-size: 0.5em;
                 .icon{
                     width: 70px;
+                    height: 70px;
+                    line-height: 1;
                 }
             }
         }
@@ -166,6 +168,7 @@ export default {
                     font-size: 0.8em;
                     .icon{
                         width: 100%;
+                        height: auto;
                     }
                 }
             }
