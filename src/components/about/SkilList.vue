@@ -2,7 +2,9 @@
     <h1 class="mb-4 fs-3 text-center text-decoration-underline">
         Skils
     </h1>
-    <FloatingWrap @ob-callback="obCallback">
+    <FloatingWrap
+        @ob-callback="obCallback"
+        class="text-dark">
         <template
             v-for="(stack, i) of stackList"
             :key="stack.name">
@@ -11,10 +13,10 @@
                 class="floating-wrap d-flex flex-wrap flex-md-nowrap justify-content-between align-items-end mb-2 mb-md-3">
                 <div
                     v-if="stackList[(i - 1)]"
-                    class="floating-box mb-2 mb-md-0 rounded-3 text-white"
+                    class="floating-box mb-2 mb-md-0 rounded-3"
                     :class="{ 'small-box': (i - 1) % 4 == 0 }"
                     :style="{ backgroundColor: randomColor() }">
-                    <h2 class="p-2 border-bottom border-white fs-4">
+                    <h2 class="p-2 border-dark fs-4">
                         {{ stackList[(i - 1)].name }}
                     </h2>
                     <ul class="d-flex flex-wrap justify-content-center align-items-start p-1 p-md-2 text-center">
@@ -36,10 +38,10 @@
                 </div>
                 <div
                     v-if="stackList[i]"
-                    class="floating-box rounded-3 text-white"
+                    class="floating-box rounded-3"
                     :class="{ 'small-box': (i - 1) % 4 != 0 }"
                     :style="{ backgroundColor: randomColor() }">
-                    <h2 class="p-2 border-bottom border-white fs-4">
+                    <h2 class="p-2 border-dark fs-4">
                         {{ stackList[i].name }}
                     </h2>
                     <ul class="d-flex flex-wrap justify-content-center align-items-start p-1 p-md-2 text-center">
@@ -92,10 +94,7 @@ export default {
     },
     methods: {
         randomColor() {
-            const red = Math.floor(Math.random() * 220) //256 은 너무 밝은 색이 나올때도 있음
-            const green = Math.floor(Math.random() * 220)
-            const blue = Math.floor(Math.random() * 220)
-            return `rgb(${red}, ${green}, ${blue})`
+            return `hsl(${Math.floor(Math.random() * 100)}, 65%, 65%)`
         },
         obCallback(target, isShow){
             if(isShow) {
@@ -124,6 +123,9 @@ export default {
         }
         &:nth-child(even){
             transform: translateX(100%) !important;
+        }
+        h2{
+            border-bottom: 1px dashed;
         }
         ul{
             gap: $spacer * 0.5;
