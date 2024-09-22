@@ -9,6 +9,18 @@
             <font-awesome-icon icon="fa-solid fa-filter" />
             <span class="ms-1">Filter</span>
         </button>
+        <button
+            v-show="Object.values(formData).join('').length != 0"
+            class="reset ms-1 border-0 bg-transparent text-white fs-4"
+            @click="reset">
+            <font-awesome-icon
+                class="icon"
+                icon="fa-solid fa-rotate-right" />
+            <span class="ms-1">Reset</span>
+        </button>
+        <p class="m-0 float-end">
+            Total ( {{ portfoliosCnt }} )
+        </p>
         <div
             class="filterList overflow-hidden"
             :style="{height: filterHeight + 'px'}">
@@ -55,9 +67,6 @@
                 </template>
             </ul>
         </div>
-        <p class="mt-1">
-            Total ( {{ portfoliosCnt }} )
-        </p>
     </form>
 </template>
 
@@ -106,6 +115,12 @@ export default {
                 filters: this.formData
             })
         },
+        reset() { // 필터 초기화
+            this.$store.dispatch('notion/setFilters', {
+                filters: {}
+            })
+            Object.keys(this.formData).forEach(key => this.formData[key] = [])
+        },
         slideDown() {
             this.$refs.filterListWrap.classList.toggle('on')
             if(this.$refs.filterListWrap.classList.contains('on')){
@@ -116,16 +131,24 @@ export default {
         }
     },
     unmounted() {
-        // 필터 초기화
-        this.$store.dispatch('notion/setFilters', {
-            filters: {}
-        })
+        this.reset()
     },
 }
 </script>
 
 <style lang="scss" scoped>
 .container{
+    .reset{
+        .icon{
+            transform-origin: center;
+            transition: $transition-base;
+        }
+        &:hover{
+            .icon{
+                transform: rotate(360deg);
+            }
+        }
+    }
     .filterList{
         line-height: 2.5;
         transition: $transition-base;
