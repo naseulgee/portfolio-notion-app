@@ -22,7 +22,7 @@
                             v-for="el in stackList[(i - 1)].options"
                             :key="el.id"
                             class="mw-100">
-                            <div class="icon">
+                            <div class="icon mx-auto">
                                 <NotionObj :prop="el.icon" />
                             </div>
                             <br />
@@ -47,7 +47,7 @@
                             v-for="el in stackList[i].options"
                             :key="el.id"
                             class="mw-100">
-                            <div class="icon">
+                            <div class="icon mx-auto">
                                 <NotionObj :prop="el.icon" />
                             </div>
                             <br />

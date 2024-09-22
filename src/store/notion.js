@@ -19,6 +19,7 @@ export default {
             filters   : {}, // 속성 필터링 조건 목록
             stackList : {},
             stackFList: [], // 필터용 스택 목록
+            filterNames: {}, // 관계형 속성 이름 꺼내기
         }
     },
     // 계산된 데이터. computed와 유사
@@ -44,16 +45,22 @@ export default {
 
                     for (let k = 0; k < portfolios.length; k++) {
                         const portfolio = portfolios[k] // 포트폴리오
-                        const { type, select, multi_select, relation } = portfolio.properties[key]
-                        // console.log("portfolio:::", portfolio, type, select, multi_select, relation)
+                        const { relation } = portfolio.properties[key]
+                        // console.log("portfolio:::", portfolio, relation)
 
-                        let propertiesNameList = select?.id
-                        if(type == "multi_select") propertiesNameList = multi_select?.map(select => select.id)
-                        if(type == "relation"    ) propertiesNameList = relation?.map(rel => rel.id)
+                        let propertiesNameList = relation?.map(rel => rel.id)
                         // console.log("propertiesNameList:::", propertiesNameList)
 
-                        if(propertiesNameList?.includes(filterString)) {
-                            filteredPortfolios[portfolio.id] = portfolio
+                        if(filterString.includes(',')) {
+                            filterString.split(',').forEach(fs => { // id 가 여러개일 수 있음(버전이 여러개라)
+                                if(propertiesNameList?.includes(fs)) {
+                                    filteredPortfolios[portfolio.id] = portfolio
+                                }
+                            })
+                        } else {
+                            if(propertiesNameList?.includes(filterString)) {
+                                filteredPortfolios[portfolio.id] = portfolio
+                            }
                         }
                     }
                 }
@@ -76,8 +83,8 @@ export default {
         },
         filterWithStack(state) {
             return [
-            ...state.filterList,
-            ...state.stackFList,
+                ...state.filterList,
+                ...state.stackFList,
             ]
         }
     },
@@ -126,6 +133,10 @@ export default {
                     },
                     sorts: [
                         {
+                            property: 'fixed',
+                            direction: 'descending', // ascending
+                        },
+                        {
                             property: '기간',
                             direction: 'descending', // ascending
                         },
@@ -148,24 +159,72 @@ export default {
             if(context.state.filterList.length != 0) return
 
             try {
-                // 일반 필터 조회
-                const res = await _fetchNotion({
-                    isTable: true
-                })
-                // console.log("searchFilterList:::res:::", res.data.properties)
+                // [24.09.22] 포트폴리오 관련 갯수를 설정하기 위해 타입을 relation 으로 변경
+                // select, multi_select 타입일 경우
+                // // 일반 필터 조회
+                // const res = await _fetchNotion({
+                //     isTable: true
+                // })
+                // // console.log("searchFilterList:::res:::", res.data.properties)
 
-                const filterList = Object.values(res.data.properties).filter(pp => {
-                    if(pp.name == '분류' || pp.name == '담당분야') return pp
+                // const filterList = Object.values(res.data.properties).filter(pp => {
+                //     if(pp.name == '분류' || pp.name == '담당분야') return pp
+                // })
+
+                // relation 타입일 경우
+                const pjtTypeRes = await _fetchNotionPjtType({
+                    sorts: [
+                        {
+                            property: 'order',
+                            direction: 'descending',
+                        },
+                    ],
                 })
+                const partRes = await _fetchNotionPartPosition({
+                    sorts: [
+                        {
+                            property: 'order',
+                            direction: 'ascending',
+                        },
+                    ],
+                })
+                console.log("pjtTypeRes:::", pjtTypeRes.data.results)
+                console.log("partRes:::", partRes.data.results)
+
+                // multi_select 타입 형식 맞추기
+                const filterNames = {} // 포트폴리오 목록 표기 시 이름을 빨리 찾기 위한 설정
+                const filterList = [
+                    { name: '분류', type: 'multi_select', multi_select: { options: [] } },
+                    { name: '담당분야', type: 'multi_select', multi_select: { options: [] } },
+                ]
+                pjtTypeRes.data.results.forEach(part => {
+                    const id = part.id
+                    const name = part.properties.name.title[0].plain_text
+                    const relatedCnt = part.properties.relPage.relation.length
+                    filterNames[id] = name
+
+                    filterList[0].multi_select.options.push({ id, name, relatedCnt })
+                })
+                partRes.data.results.forEach(part => {
+                    const id = part.id
+                    const name = part.properties.name.title[0].plain_text
+                    const relatedCnt = part.properties.relPage.relation.length
+                    filterNames[id] = name
+
+                    filterList[1].multi_select.options.push({ id, name, relatedCnt })
+                })
+
                 console.log("searchFilterList:::filtered:::", filterList)
 
                 context.commit('updateState', {
-                    filterList
+                    filterList,
+                    filterNames,
                 })
             } catch (error) {
                 console.log(error)
                 context.commit('updateState', {
-                    filterList: []
+                    filterList: [],
+                    filterNames: {},
                 })
             }
         },
@@ -266,7 +325,7 @@ export default {
 
                     // 스택
                     const { id, icon } = stack
-                    const stackName = name.title[0].plain_text
+                    const stackName = name.title[0].plain_text.split(' ')[0]
                     // 관련 프로젝트 개수 세팅
                     let relatedCnt = 0
                     Object.values(stack.properties).forEach(pp => {
@@ -274,7 +333,14 @@ export default {
                     })
 
                     // 실제 값 넣기
-                    multiStackList[pname].multi_select.options.push({ id, name: stackName, icon, hide: hide.checkbox, relatedCnt })
+                    const optionList = multiStackList[pname].multi_select.options
+                    const beforeOp = optionList[optionList.length - 1]
+                    if(beforeOp?.name == stackName){ // 만약 이전 스택명과 이름이 같다면(버전만 다르다면)
+                        beforeOp.id         = beforeOp.id + ',' + id
+                        beforeOp.relatedCnt = beforeOp.relatedCnt + relatedCnt
+                    } else {
+                        optionList.push({ id, name: stackName, icon, hide: hide.checkbox, relatedCnt })
+                    }
                 })
                 console.log("searchStackList:::stackList:::", stackList)
                 console.log("searchStackList:::multiStackList:::", multiStackList)
@@ -303,6 +369,12 @@ async function _fetchNotionAddImages(payload) {
 }
 async function _fetchNotionContact(payload) {
     return await axios.post('/.netlify/functions/notionContact', payload)
+}
+async function _fetchNotionPartPosition(payload) {
+    return await axios.post('/.netlify/functions/notionPartPosition', payload)
+}
+async function _fetchNotionPjtType(payload) {
+    return await axios.post('/.netlify/functions/notionPjtType', payload)
 }
 async function _fetchNotionStacks(payload) {
     return await axios.post('/.netlify/functions/notionStacks', payload)

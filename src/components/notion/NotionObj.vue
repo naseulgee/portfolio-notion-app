@@ -113,7 +113,7 @@ export default {
             if(!typeValue || typeValue.length == 0) return '' // 체크박스일 경우 값이 false 를 갖을 수 있기 때문에 위치 변경
 
             const text = /(title|rich_text|emoji|email|people|created_by|last_edited_by|number|phone_number|formula|date|created_time|last_edited_time)$/
-            const list = /(select|multi_select|status)$/
+            const list = /(select|multi_select|status|relation)$/
             const file = /(file|external)$/
             const img  = /(jpe?g|ico|png|gif|webp|svg|bmp)$/
 
@@ -176,6 +176,9 @@ export default {
 
             if("multi_select" == propType)
                 return typeValue.map(el => el.name)
+            if("relation" == propType) {
+                return typeValue.map(el => this.$store.state.notion.filterNames[el.id])
+            }
 
             return [ typeValue.name ]
         },

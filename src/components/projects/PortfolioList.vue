@@ -10,6 +10,9 @@ export default {
         FloatingWrap,
     },
     computed: {
+        filterNames() {
+            return this.$store.state.notion.filterNames
+        },
         portfolios() {
             return this.$store.getters['notion/filteredPortfolios']?.map(portfolio => {
                 return {
@@ -18,7 +21,7 @@ export default {
                     imgDec: 'cover',
                     subtitle: portfolio.properties['기간'].date?.start.slice(0,4),
                     title: portfolio.properties['프로젝트명'].title[0]?.plain_text,
-                    labels: portfolio.properties['담당분야'].multi_select?.map(el => el.name),
+                    labels: portfolio.properties['담당분야'].relation?.map(el => this.filterNames[el.id]),
                     dec: portfolio.properties['한줄소개'].rich_text[0]?.plain_text,
                 }
             })
