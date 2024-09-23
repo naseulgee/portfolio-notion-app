@@ -86,7 +86,7 @@ export default {
                 return {
                     name: stack.name,
                     options: options.filter(option => {
-                        if(!option.hide) return options
+                        if(!option.hide) return option
                     })
                 }
             })

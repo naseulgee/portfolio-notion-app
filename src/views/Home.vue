@@ -1,9 +1,11 @@
 <template>
     <!-- s: 인트로 -->
     <section
-        class="w-100 vh-100 bg-dark text-white"
+        class="intro-wrap w-100 vh-100 position-relative bg-dark text-white"
         data-them="dark">
-        <AboutIntro :class-obj="aboutIntroClass">
+        <AboutIntro
+            ref="aboutIntro"
+            :class-obj="aboutIntroClass">
             <LinkBtn>
                 <RouterLink
                     class="text-white text-decoration-none"
@@ -12,6 +14,19 @@
                 </RouterLink>
             </LinkBtn>
         </AboutIntro>
+        <div
+            class="skill-bg d-flex flex-wrap align-content-around justify-content-around w-100 h-100 overflow-hidden position-absolute top-0 start-0"
+            :style="{'--stackSize': stackSize + 'px'}">
+            <template
+                v-for="stack of stackList"
+                :key="stack.id">
+                <img
+                    v-if="stack.icon.file"
+                    :src="stack.icon.file.url"
+                    :alt="stack.name"
+                    :style="{'--delay': Math.floor(Math.random() * stackList.length) / 10 + 's'}" />
+            </template>
+        </div>
     </section>
     <!-- e: 인트로 -->
     <!-- s: 프로젝트 -->
@@ -103,6 +118,8 @@ export default {
                     'justify-content-center',
                     'align-items-start',
                     'h-100',
+                    'position-relative',
+                    'z-1'
                 ],
                 titleClass: [
                     'mt-1',
@@ -144,10 +161,64 @@ export default {
             },
         }
     },
+    computed: {
+        stackList() {
+            return this.$store.state.notion.stackFList.filter(stack => {
+                if(['Design', 'Front', 'Back', 'DB'].includes(stack.name)) return []
+            }).map(stack => {
+                const options = stack.multi_select.options
+                return options.filter(option => {
+                    if(!option.hide) return option
+                })
+            }).flat()
+        },
+        stackSize() {
+            const winW = window.innerWidth
+            const winH = window.innerHeight
+            const stackCnt = this.stackList.length
+            return stackCnt > 0 ? Math.floor(Math.sqrt((winW * winH) / stackCnt)) - 20 : 0
+        },
+    },
+    mounted(){
+        // 타이핑 효과 추가
+        this.$typing(this.$refs.aboutIntro.$refs.title, [
+            'Designer,',
+            'Front-End,',
+            'Back-End,',
+            'Full-stack Developer.',
+        ])
+    },
+    unmounted() {
+        // 페이지 이동 시 타이핑 효과 제거
+        clearTimeout(this.$typing)
+    }
 }
 </script>
 
 <style lang="scss" scoped>
+@keyframes _ani_glitter {
+    0%   { opacity: 0.05; }
+    70% { opacity: 0.2; }
+}
+
+.intro-wrap{
+    .title{
+        &::after{
+            content: '';
+            display: inline-block;
+        }
+    }
+    .skill-bg{
+        img{
+            width: var(--stackSize);
+            height: var(--stackSize);
+            padding: $spacer * 0.5;
+            object-fit: contain;
+            opacity: 0.1;
+            animation: _ani_glitter 1.5s var(--delay) ease-in-out infinite;
+        }
+    }
+}
 .work-point-wrap{
     z-index: -1;
     text-shadow: 0 0 1.5em var(--bs-dark);

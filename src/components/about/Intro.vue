@@ -10,9 +10,13 @@
         <h1
             class="title"
             :class="[...classObj.titleClass]">
-            Designer,<br />
-            Front/Back - End<br />
-            Developer.
+            <span class="text-primary">&#123;</span>
+            <span ref="title">
+                Designer,<br />
+                Front / Back - End<br />
+                Developer.
+            </span>
+            <span class="text-primary">&#125;</span>
         </h1>
         <p
             class="dec opacity-50"
