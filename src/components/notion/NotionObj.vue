@@ -160,7 +160,7 @@ export default {
                 return typeValue.id
             // 날짜
             if(propType == "date")
-                return typeValue.start + (typeValue.end ? ' ~ ' + typeValue.end : '')
+                return typeValue.start?.slice(2) + (typeValue.end && ' ~ ' + typeValue.end.slice(2))
             if(["created_time", "last_edited_time"].includes(propType))
                 return typeValue.split('T')[0]
             // 수식

@@ -47,19 +47,7 @@
                             :prop="pfprop['소개']"
                             dec="소개" />
                     </p>
-                    <ul class="d-flex mt-5 mb-0 p-0">
-                        <li
-                            v-if="pfprop['URL'].url"
-                            class="me-2">
-                            <LinkBtn>
-                                <a
-                                    class="text-white text-decoration-none"
-                                    :href="pfprop['URL'].url"
-                                    target="_blank">
-                                    URL
-                                </a>
-                            </LinkBtn>
-                        </li>
+                    <ul class="d-flex flex-wrap gap-2 mt-5 mb-0 p-0">
                         <li v-if="pfprop['Github'].url">
                             <LinkBtn>
                                 <a
@@ -69,6 +57,51 @@
                                     Github
                                 </a>
                             </LinkBtn>
+                        </li>
+                        <li v-if="pfprop['URL'].url">
+                            <LinkBtn>
+                                <a
+                                    class="text-white text-decoration-none"
+                                    :href="pfprop['URL'].url"
+                                    target="_blank">
+                                    URL
+                                </a>
+                            </LinkBtn>
+                        </li>
+                        <li
+                            v-if="protfolioChildren.length > 0"
+                            class="migration w-100">
+                            <strong class="d-block my-1">Migration</strong>
+                            <ol>
+                                <template
+                                    v-for="child of protfolioChildren"
+                                    :key="child.id">
+                                    <li v-if="(child.properties['Github'].url || child.properties['URL'].url)">
+                                        <ul class="d-flex flex-wrap gap-2 p-0">
+                                            <li v-if="child.properties['Github'].url">
+                                                <LinkBtn>
+                                                    <a
+                                                        class="text-white text-decoration-none"
+                                                        :href="child.properties['Github'].url"
+                                                        target="_blank">
+                                                        Github
+                                                    </a>
+                                                </LinkBtn>
+                                            </li>
+                                            <li v-if="child.properties['URL'].url">
+                                                <LinkBtn>
+                                                    <a
+                                                        class="text-white text-decoration-none"
+                                                        :href="child.properties['URL'].url"
+                                                        target="_blank">
+                                                        URL
+                                                    </a>
+                                                </LinkBtn>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </template>
+                            </ol>
                         </li>
                     </ul>
                     <div class="logo mb-n4 mb-md-n3 me-2 rounded overflow-hidden position-absolute bottom-0 end-0">
@@ -85,6 +118,24 @@
                         class-nm="opacity-50"
                         :prop="pfprop['기간']"
                         dec="기간" />
+                    <div
+                        v-if="protfolioChildren.length > 0"
+                        class="migration w-100 opacity-50">
+                        <strong class="d-block my-1">Migration</strong>
+                        <ol>
+                            <template
+                                v-for="child of protfolioChildren"
+                                :key="child.id">
+                                <li v-if="child.properties['기간']">
+                                    <ul class="d-flex flex-wrap gap-2 p-0">
+                                        <NotionObj
+                                            :prop="child.properties['기간']"
+                                            dec="기간" />
+                                    </ul>
+                                </li>
+                            </template>
+                        </ol>
+                    </div>
                 </li>
                 <li>
                     <strong class="d-block fw-normal">In charge</strong>
@@ -138,6 +189,22 @@
                         <NotionObj
                             :prop="pfprop['담당기능']"
                             dec="담당기능" />
+                    </div>
+                    <div
+                        v-if="protfolioChildren.length > 0"
+                        class="migration w-100">
+                        <strong class="d-block my-1">Migration</strong>
+                        <ol>
+                            <template
+                                v-for="child of protfolioChildren"
+                                :key="child.id">
+                                <li v-if="child.properties['담당기능']">
+                                    <NotionObj
+                                        :prop="child.properties['담당기능']"
+                                        dec="담당기능" />
+                                </li>
+                            </template>
+                        </ol>
                     </div>
                 </article>
                 <article class="participate mb-5 text-center">
@@ -193,6 +260,23 @@
                             </i>
                             <span>{{ stackList[relStack.id]?.properties.name.title[0].plain_text }}</span>
                         </div>
+                        <template
+                            v-for="child of protfolioChildren"
+                            :key="child.id">
+                            <template v-if="child.properties[stack]?.relation.length > 0">
+                                <div
+                                    class="icon-wrap text-center"
+                                    v-for="relStack in child.properties[stack]?.relation"
+                                    :key="relStack.id">
+                                    <i class="d-block mx-auto">
+                                        <NotionObj
+                                            :prop="stackList[relStack.id]?.icon"
+                                            :dec="stackList[relStack.id]?.properties.name.title[0].plain_text + ' icon'" />
+                                    </i>
+                                    <span>{{ stackList[relStack.id]?.properties.name.title[0].plain_text }}</span>
+                                </div>
+                            </template>
+                        </template>
                     </li>
                 </template>
             </ul>
@@ -379,6 +463,22 @@
                     <NotionObj
                         :prop="pfprop['성장포인트']"
                         dec="성장포인트" />
+                    <div
+                        v-if="protfolioChildren.length > 0"
+                        class="migration w-100">
+                        <strong class="d-block my-1">Migration</strong>
+                        <ol>
+                            <template
+                                v-for="child of protfolioChildren"
+                                :key="child.id">
+                                <li v-if="child.properties['성장포인트']">
+                                    <NotionObj
+                                        :prop="child.properties['성장포인트']"
+                                        dec="성장포인트" />
+                                </li>
+                            </template>
+                        </ol>
+                    </div>
                 </div>
             </article>
         </section>
@@ -470,6 +570,16 @@ export default {
         },
         pfprop() {
             return this.portfolio.properties
+        },
+        protfolioChildren() {
+            let children = this.portfolio.properties['하위 항목'].relation
+            if(children.length == 0) return []
+            children = children.map(child => this.$store.getters['notion/portfolio'](child.id))
+            this.$store.dispatch('notion/searchAddImages', {
+                database_id: this.$route.params.id,
+                children_ids: children.map(({ id }) => id),
+            })
+            return children
         },
         stackList() {
             return this.$store.state.notion.stackList
@@ -563,6 +673,12 @@ export default {
         }
     }
 }
+.migration {
+    font-size: 0.9em;
+    ol {
+        font-size: 0.9em;
+    }
+}
 .cover{
     &::before{
         content: '';
@@ -585,7 +701,7 @@ export default {
     }
 }
 .black-line{
-    gap: $spacer;
+    gap: map-get($spacers, 2);
 }
 .purpose{
     .did{
@@ -692,7 +808,7 @@ export default {
 @include media-breakpoint-down(xl){
     .black-line{
         li{
-            width: calc(50% - $spacer);
+            width: calc(50% - map-get($spacers, 2));
         }
     }
     .stack-wrap{

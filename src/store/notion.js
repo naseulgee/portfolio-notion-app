@@ -13,7 +13,7 @@ export default {
     state     : () => {
         return {
             loading   : false,
-            portfolios: [],
+            portfolios: {},
             addImages : {},
             filterList: [], // 속성 목록
             filters   : {}, // 속성 필터링 조건 목록
@@ -28,8 +28,9 @@ export default {
         // NOTE: API 를 이용하여 필터링한 데이터를 받을 수 도 있지만, getters 연습과 네트워크 사용을 줄여보기 위해 getters로 작성함
         filteredPortfolios: state => {
             const { portfolios, filters } = state
+            const portfolioValues = Object.values(portfolios)
             // 선택된 필터링 조건이 없으면 포트폴리오 전체 리스트 전달
-            if(!filters || Object.values(filters).join('').length == 0) return portfolios
+            if(!filters || Object.values(filters).join('').length == 0) return portfolioValues.filter(portfolio => portfolio.properties['상위 항목'].relation.length == 0)
             // console.log("filters:::", filters)
 
             const filteredPortfolios = {}
@@ -39,29 +40,26 @@ export default {
                 // console.log("filterValues:::", filterValues)
                 if(!filterValues || filterValues.length == 0) continue
 
-                for (let j = 0; j < filterValues.length; j++) {
-                    const filterString = filterValues[j]; // 속성값
+                for (const filterString of filterValues) { // 속성값
                     // console.log("filterString:::", filterString)
-
-                    for (let k = 0; k < portfolios.length; k++) {
-                        const portfolio = portfolios[k] // 포트폴리오
+                    for (const portfolio of portfolioValues) { // 포트폴리오
                         const { relation } = portfolio.properties[key]
                         // console.log("portfolio:::", portfolio, relation)
 
                         let propertiesNameList = relation?.map(rel => rel.id)
                         // console.log("propertiesNameList:::", propertiesNameList)
 
-                        if(filterString.includes(',')) {
-                            filterString.split(',').forEach(fs => { // id 가 여러개일 수 있음(버전이 여러개라)
-                                if(propertiesNameList?.includes(fs)) {
+                        filterString.split(',').forEach(fs => { // id 가 여러개일 수 있음(버전이 여러개라)
+                            if(propertiesNameList?.includes(fs)) {
+                                // [24.12.04] 마이그레이션 프로젝트를 하위 항목으로 이동하는 구조 변경에 따른 로직 변경
+                                const topProtfolios = portfolio.properties['상위 항목'].relation
+                                if(topProtfolios.length > 0){ // 상위 항목이 있다면 상위 프로젝트를
+                                    topProtfolios.map(topProtfolio => filteredPortfolios[topProtfolio.id] = portfolios[topProtfolio.id])
+                                } else { // 없다면 자신을 추가
                                     filteredPortfolios[portfolio.id] = portfolio
                                 }
-                            })
-                        } else {
-                            if(propertiesNameList?.includes(filterString)) {
-                                filteredPortfolios[portfolio.id] = portfolio
                             }
-                        }
+                        })
                     }
                 }
             }
@@ -72,14 +70,8 @@ export default {
         portfolio: state => id => {
             const { portfolios } = state
             if(portfolios.length == 0) return null
-            if(!id) return portfolios[0]
-
-            for (const el of portfolios) {
-                if(el.id == id) {
-                    console.log("portfolio:::", el)
-                    return el
-                }
-            }
+            if(!id) return Object.values(portfolios)[0]
+            return portfolios[id]
         },
         filterWithStack(state) {
             return [
@@ -94,7 +86,7 @@ export default {
     */
     mutations : {
         resetPortfolios(state) {
-            state.portfolios = []
+            state.portfolios = {}
             state.loading = false
         },
         resetAddImages(state) {
@@ -144,8 +136,12 @@ export default {
                 })
                 console.log("searchPortfolios:::res:::", res.data)
 
+                const portfolios = res.data.results.reduce((newObj, obj) => {
+                    newObj[obj.id] = obj
+                    return newObj
+                }, {})
                 context.commit('updateState', {
-                    portfolios: res.data.results,
+                    portfolios,
                     loading: false,
                 })
             } catch (error) {
@@ -166,7 +162,6 @@ export default {
                 //     isTable: true
                 // })
                 // // console.log("searchFilterList:::res:::", res.data.properties)
-
                 // const filterList = Object.values(res.data.properties).filter(pp => {
                 //     if(pp.name == '분류' || pp.name == '담당분야') return pp
                 // })
@@ -237,14 +232,22 @@ export default {
         // 첨부 이미지 목록 검색
         async searchAddImages({ commit }, payload) {
             try {
-                const { database_id } = payload
-                // [참고] https://developers.notion.com/reference/property-object
-                const res = await _fetchNotionAddImages({
-                    ...payload,
-                    filter: {
+                const { database_id, children_ids = [] } = payload
+                const filter = {
+                    or: [{
                         property: "Project API",
                         relation: { contains: database_id }
-                    },
+                    }]
+                }
+                children_ids.map(children_id => {
+                    filter.or.push({
+                        property: "Project API",
+                        relation: { contains: children_id }
+                    })
+                })
+                // [참고] https://developers.notion.com/reference/property-object
+                const res = await _fetchNotionAddImages({
+                    filter,
                     sorts: [
                         {
                             property: 'pagetype',
@@ -265,7 +268,7 @@ export default {
                     if(!imgList[typeName] || imgList[typeName].length == 0) imgList[typeName] = []
                     imgList[typeName].push({
                         url,
-                        pagedec: pagedecText ? pagedecText : imgName,
+                        pagedec: pagedecText ?? imgName,
                         pagetype: pagetype.select?.name,
                     })
                     if(point.checkbox) imgList.point = { url, pagedec: imgName }
@@ -304,7 +307,7 @@ export default {
                         },
                         {
                             property: 'order',
-                            direction: 'ascending', // descending
+                            direction: 'descending',
                         },
                     ],
                 })

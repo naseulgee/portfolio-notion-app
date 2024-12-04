@@ -19,17 +19,17 @@
                 <p v-if="imgObj.subtitle">
                     {{ imgObj.subtitle }}
                 </p>
-                <template
-                    v-if="imgObj.title"
-                    #title>
-                    {{ imgObj.title }}
-                </template>
             </ArrowBottomBtn>
+            <strong
+                v-if="imgObj.title"
+                class="title d-block w-100 text-truncate fw-normal">
+                {{ imgObj.title }}
+            </strong>
             <ul
                 v-if="imgObj.labels"
-                class="part d-flex flex-wrap p-0 opacity-50 fs-6">
+                class="part d-flex flex-wrap my-1 p-0 opacity-50">
                 <template v-if="typeof imgObj.labels == 'string'">
-                    <li class="d-inlin-block mb-1 me-1 px-1 border border-white rounded-pill">
+                    <li class="d-inlin-block px-1 border border-white rounded-pill">
                         {{ imgObj.labels }}
                     </li>
                 </template>
@@ -37,12 +37,14 @@
                     <li
                         v-for="(label, i) in imgObj.labels"
                         :key="i"
-                        class="d-inlin-block mb-1 me-1 px-1 border border-white rounded-pill">
+                        class="d-inlin-block px-1 border border-white rounded-pill">
                         {{ label }}
                     </li>
                 </template>
             </ul>
-            <div v-if="imgObj.dec">
+            <div
+                v-if="imgObj.dec"
+                class="dec d-block w-100 text-truncate">
                 {{ imgObj.dec }}
             </div>
         </div>
@@ -102,6 +104,15 @@ export default {
         width: var(--width);
         height: calc(var(--width) * 3 * 0.5);
         font-size: 1.5rem;
+        .hover-box-info{
+            .title{
+                font-size: 2em;
+            }
+            ul {
+                gap: 0.5em;
+                font-size: 0.56em;
+            }
+        }
         &.small-box{ // 작은 사이즈
             --width: #{'min(400px, (40vw - ' + $spacer + '))'};
             font-size: 1rem;

@@ -60,6 +60,9 @@ img {
     height: 100%;
     object-fit: cover;
 }
+ol {
+    list-style: decimal-leading-zero;
+}
 .text-hover-none{
     &:hover{
         color: inherit !important;
