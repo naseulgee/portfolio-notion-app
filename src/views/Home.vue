@@ -1,19 +1,11 @@
 <template>
     <!-- s: 인트로 -->
     <section
-        class="intro-wrap w-100 vh-100 position-relative bg-dark text-white"
+        class="intro-wrap w-100 min-vh-100 position-relative bg-dark text-white"
         data-them="dark">
         <AboutIntro
             ref="aboutIntro"
-            :class-obj="aboutIntroClass">
-            <LinkBtn>
-                <RouterLink
-                    class="text-white text-decoration-none"
-                    to="/about-me">
-                    About Me
-                </RouterLink>
-            </LinkBtn>
-        </AboutIntro>
+            :class-obj="aboutIntroClass" />
         <div
             class="skill-bg d-flex flex-wrap align-content-around justify-content-around w-100 h-100 overflow-hidden position-absolute top-0 start-0"
             :style="{'--stackSize': stackSize + 'px'}">
@@ -29,59 +21,93 @@
         </div>
     </section>
     <!-- e: 인트로 -->
+    <!-- s: 작업 포인트 -->
+    <section
+        class="work-point-wrap w-100 position-relative bg-dark text-white text-center"
+        data-them="dark">
+        <div class="work-point-inner-wrap position-relative">
+            <div class="d-flex flex-wrap align-content-center justify-content-center align-item-center min-vh-100 position-sticky top-0 start-0 z-1">
+                <WorkPointList />
+            </div>
+            <div class="shape-wrap">
+                <img
+                    src="~/assets/images/main/shape-1.png"
+                    alt="shape-1" />
+                <img
+                    src="~/assets/images/main/shape-2.png"
+                    alt="shape-2" />
+                <img
+                    src="~/assets/images/main/shape-3.png"
+                    alt="shape-3" />
+                <img
+                    src="~/assets/images/main/shape-1.png"
+                    alt="shape-1" />
+                <img
+                    src="~/assets/images/main/shape-2.png"
+                    alt="shape-2" />
+                <img
+                    src="~/assets/images/main/shape-3.png"
+                    alt="shape-3" />
+            </div>
+        </div>
+        <!-- s: 성과 -->
+        <div class="performance-wrap w-100 py-5 text-start">
+            <Performance />
+        </div>
+        <!-- e: 성과 -->
+    </section>
+    <!-- e: 작업 포인트 -->
+    <!-- s: 스킬 리스트 -->
+    <section
+        class="skil-list-wrap w-100 py-5 overflow-hidden"
+        data-them="white">
+        <SkilList />
+    </section>
+    <!-- e: 스킬 리스트 -->
     <!-- s: 프로젝트 -->
     <section
-        class="w-100 min-vh-100 py-5"
-        data-them="white">
+        class="w-100 min-vh-100 py-5 bg-dark text-white"
+        data-them="dark">
         <PjtIntro :class-obj="pjtIntroClass" />
         <SloganSlide next="Projects" />
+        <div class="container text-end">
+            <LinkBtn>
+                <RouterLink
+                    class="d-inline-block text-white text-hover-none text-decoration-none"
+                    to="/projects">
+                    <span>View all portfolios</span>
+                </RouterLink>
+            </LinkBtn>
+        </div>
         <div class="mt-4">
             <PortfolioList :limit="4" />
         </div>
         <div class="container">
-            <RouterLink
-                class="d-inline-block text-hover-none text-decoration-none"
-                to="/projects">
-                <h2 class="mt-5 mb-4 fs-4">
-                    프로젝트를<br />
-                    더 보고 싶으신가요?
-                </h2>
-                <LinkBtn>
+            <h2 class="mt-5 mb-4 fs-4">
+                프로젝트를<br />
+                더 보고 싶으신가요?
+            </h2>
+            <LinkBtn>
+                <RouterLink
+                    class="d-inline-block text-white text-hover-none text-decoration-none"
+                    to="/projects">
                     <span>View all portfolios</span>
-                </LinkBtn>
-            </RouterLink>
+                </RouterLink>
+            </LinkBtn>
         </div>
     </section>
     <!-- e: 프로젝트 -->
-    <!-- s: 작업 포인트 -->
-    <section
-        class="work-point-wrap w-100 py-5 position-relative bg-dark text-white text-center"
-        data-them="dark">
-        <div class="work-point-inner-wrap position-relative">
-            <WorkPointIntro :class-obj="WorkPointIntroClass" />
-            <div class="shape-wrap">
-                <img src="~/assets/images/main/shape-1.png" />
-                <img src="~/assets/images/main/shape-2.png" />
-                <img src="~/assets/images/main/shape-3.png" />
-                <img src="~/assets/images/main/shape-1.png" />
-                <img src="~/assets/images/main/shape-2.png" />
-                <img src="~/assets/images/main/shape-3.png" />
-            </div>
-        </div>
-        <WorkPointList />
-    </section>
-    <!-- e: 작업 포인트 -->
     <!-- s: 풋터 슬로건 -->
-    <section>
+    <section class="overflow-hidden">
         <RouterLink
             class="text-hover-none text-decoration-none"
-            to="/projects">
+            to="/contact">
             <div class="container mt-4">
                 <ArrowBottomBtn>
-                    View all portfolios
+                    Contact
                 </ArrowBottomBtn>
             </div>
-            <SloganSlide />
+            <SloganSlide next="Contact" />
         </RouterLink>
     </section>
     <!-- e: 풋터 슬로건 -->
@@ -92,8 +118,9 @@ import SloganSlide from '~/components/common/slogan/SloganSlide'
 import LinkBtn from '~/components/common/buttons/LinkBtn'
 import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn'
 import AboutIntro from '~/components/about/Intro'
-import WorkPointIntro from '~/components/about/WorkPointIntro'
 import WorkPointList from '~/components/about/WorkPointList'
+import Performance from '~/components/about/Performance'
+import SkilList from '~/components/about/SkilList'
 import PjtIntro from '~/components/projects/Intro'
 import PortfolioList from '~/components/projects/PortfolioList'
 
@@ -103,8 +130,9 @@ export default {
         LinkBtn,
         ArrowBottomBtn,
         AboutIntro,
-        WorkPointIntro,
         WorkPointList,
+        Performance,
+        SkilList,
         PjtIntro,
         PortfolioList,
     },
@@ -117,7 +145,7 @@ export default {
                     'flex-wrap',
                     'justify-content-center',
                     'align-items-start',
-                    'h-100',
+                    'min-vh-100',
                     'position-relative',
                     'z-1'
                 ],
@@ -127,6 +155,7 @@ export default {
                     'fs-2',
                 ],
                 subtitleClass: [
+                    'mt-4',
                     'opacity-50',
                 ],
                 decClass: [
@@ -141,23 +170,6 @@ export default {
                 decClass: [
                     'mb-4',
                 ],
-            },
-            WorkPointIntroClass: {
-                containerClass: [
-                    'container',
-                    'd-flex',
-                    'flex-column',
-                    'flex-wrap',
-                    'justify-content-center',
-                    'align-items-center',
-                    'min-vh-100',
-                    'position-sticky',
-                    'top-0',
-                    'start-0',
-                    'z-1',
-                ],
-                titleClass: [],
-                decClass: [],
             },
         }
     },
@@ -220,7 +232,7 @@ export default {
     }
 }
 .work-point-wrap{
-    z-index: -1;
+    z-index: 0;
     text-shadow: 0 0 1.5em var(--bs-dark);
     .work-point-inner-wrap{
         height: 200vh;
@@ -254,7 +266,7 @@ export default {
                     bottom: -10%;
                 }
                 &:nth-child(5){
-                    bottom: -23%;
+                    top: 8%;
                 }
                 &:nth-child(6){
                     bottom: -31%;
