@@ -6,7 +6,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import NotFound from '~/views/NotFound'
 import Home from '~/views/Home'
-import AboutMe from '~/views/AboutMe'
+// import AboutMe from '~/views/AboutMe'
 import Projects from '~/views/Projects'
 import ProjectDetail from '~/views/ProjectDetail'
 import Contact from '~/views/Contact'
@@ -53,18 +53,18 @@ export default createRouter({
             alias: '/home',
             component: Home,
             meta: {
-                next: 'About Me',
+                next: 'Projects',
                 isHide: true,
             }
         },
-        {
-            name: 'About Me',
-            path: '/about-me',
-            component: AboutMe,
-            meta: {
-                next: 'Projects'
-            }
-        },
+        // {
+        //     name: 'About Me',
+        //     path: '/about-me',
+        //     component: AboutMe,
+        //     meta: {
+        //         next: 'Projects'
+        //     }
+        // },
         {
             name: 'Projects',
             path: '/projects',
@@ -87,7 +87,7 @@ export default createRouter({
             path: '/contact',
             component: Contact,
             meta: {
-                next: 'About Me'
+                next: 'Home'
             }
         },
     ]
