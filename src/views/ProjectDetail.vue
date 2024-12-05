@@ -739,6 +739,18 @@ export default {
         width: fit-content;
         max-width: 100%;
         overflow-x: auto;
+        &::-webkit-scrollbar {
+            height: 10px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: var(--bs-gray-500);
+            border-radius: 10px;
+            border: 2px solid var(--bs-gray-200);
+        }
+        &::-webkit-scrollbar-track {
+            border-radius: 10px;
+            background-color: var(--bs-gray-200);
+        }
         .hover-box{
             flex-shrink: 0;
             width: 500px;
