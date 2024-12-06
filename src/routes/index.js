@@ -57,6 +57,14 @@ export default createRouter({
                 isHide: true,
             }
         },
+        {
+            name: 'About Me',
+            path: '/home',
+            component: Home,
+            meta: {
+                next: 'Projects'
+            }
+        },
         // {
         //     name: 'About Me',
         //     path: '/about-me',
@@ -70,7 +78,7 @@ export default createRouter({
             path: '/projects',
             component: Projects,
             meta: {
-                next: 'Contact'
+                next: 'Home'
             }
         },
         {
