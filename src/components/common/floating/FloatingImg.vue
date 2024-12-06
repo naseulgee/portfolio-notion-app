@@ -7,7 +7,7 @@
             <div
                 v-if="!imgObj.url"
                 class="hover-box-img"
-                :style="{ backgroundColor: randomColor }"></div>
+                :style="{ backgroundColor: $randomColor() }"></div>
             <img
                 v-else
                 class="hover-box-img"
@@ -68,14 +68,6 @@ export default {
     },
     components: {
         ArrowBottomBtn,
-    },
-    computed: {
-        randomColor() {
-            const red = Math.floor(Math.random() * 256)
-            const green = Math.floor(Math.random() * 256)
-            const blue = Math.floor(Math.random() * 256)
-            return `rgb(${red}, ${green}, ${blue})`
-        }
     },
     methods: {
         clickEvent() {

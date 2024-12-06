@@ -10,7 +10,7 @@
             :key="stack.name">
             <li
                 class="floating-wrap w-100 mb-2 rounded-3 position-relative text-center"
-                :style="{ backgroundColor: randomColor() }">
+                :style="{ backgroundColor: $randomColor(65, 75) }">
                 <h2 class="m-0 p-2 fs-4">
                     {{ stack.name }}
                 </h2>
