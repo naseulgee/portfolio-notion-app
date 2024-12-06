@@ -1,5 +1,5 @@
 <template>
-    <h1 class="mb-4 fs-3 text-center text-decoration-underline">
+    <h1 class="mb-4 fs-3 text-decoration-underline">
         Skils
     </h1>
     <FloatingWrap
@@ -9,7 +9,7 @@
             v-for="stack of stackList"
             :key="stack.name">
             <li
-                class="floating-wrap w-100 mb-2 rounded-3 position-relative text-center"
+                class="floating-wrap d-inline-block mw-100 mx-md-1 mb-2 rounded-3 position-relative text-center"
                 :style="{ backgroundColor: $randomColor(65, 75) }">
                 <h2 class="m-0 p-2 fs-4">
                     {{ stack.name }}
@@ -80,9 +80,6 @@ export default {
         }
     },
     methods: {
-        randomColor() {
-            return `hsl(${Math.floor(Math.random() * 100)}, 65%, 65%)`
-        },
         obCallback(target, isShow){
             if(isShow) {
                 target.classList.add('on')

@@ -21,6 +21,13 @@
         </div>
     </section>
     <!-- e: 인트로 -->
+    <!-- s: 분석 차트 -->
+    <section
+        class="analysis-wrap container w-100 py-5"
+        data-them="white">
+        <CharacterChart />
+    </section>
+    <!-- e: 분석 차트 -->
     <!-- s: 작업 포인트 -->
     <section
         class="work-point-wrap w-100 position-relative bg-dark text-white text-center"
@@ -59,7 +66,7 @@
     <!-- e: 작업 포인트 -->
     <!-- s: 스킬 리스트 -->
     <section
-        class="skil-list-wrap w-100 py-5 overflow-hidden"
+        class="skil-list-wrap w-100 py-5 overflow-hidden text-center"
         data-them="white">
         <SkilList />
     </section>
@@ -118,6 +125,7 @@ import SloganSlide from '~/components/common/slogan/SloganSlide'
 import LinkBtn from '~/components/common/buttons/LinkBtn'
 import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn'
 import AboutIntro from '~/components/about/Intro'
+import CharacterChart from '~/components/about/CharacterChart'
 import WorkPointList from '~/components/about/WorkPointList'
 import Performance from '~/components/about/Performance'
 import SkilList from '~/components/about/SkilList'
@@ -129,6 +137,7 @@ export default {
         SloganSlide,
         LinkBtn,
         ArrowBottomBtn,
+        CharacterChart,
         AboutIntro,
         WorkPointList,
         Performance,
@@ -232,8 +241,7 @@ export default {
     }
 }
 .work-point-wrap{
-    z-index: 0;
-    text-shadow: 0 0 1.5em var(--bs-dark);
+    z-index: -1;
     .work-point-inner-wrap{
         height: 200vh;
         .shape-wrap{

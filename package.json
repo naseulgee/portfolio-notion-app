@@ -51,6 +51,7 @@
     "@notionhq/client": "^2.2.15",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "chart.js": "^4.4.7",
     "vue": "^3.4.26",
     "vue-router": "^4.3.2",
     "vuex": "^4.0.2"
