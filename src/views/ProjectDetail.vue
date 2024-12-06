@@ -757,6 +757,12 @@ export default {
             height: 400px;
             max-width: 70vw;
             font-size: 1.5rem;
+            &:nth-child(even){
+                transform: translateY(-(map-get($spacers, 1)));
+            }
+            &:nth-child(odd){
+                transform: translateY(map-get($spacers, 2));
+            }
         }
     }
 }
