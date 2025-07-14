@@ -11,7 +11,7 @@ import Projects from '~/views/Projects'
 import ProjectDetail from '~/views/ProjectDetail'
 import Contact from '~/views/Contact'
 import TaskReport from '~/views/TaskReport'
-import TaskReportLayout from '~/layout/TaskReportLayout'
+import TaskReportLayout from '~/layouts/TaskReportLayout'
 
 export default createRouter({
     /** history 값 종류
