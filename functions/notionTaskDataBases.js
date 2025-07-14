@@ -2,7 +2,7 @@
 
 const { Client } = require("@notionhq/client")
 
-exports.handler = async () => {
+exports.handler = async (request, context) => {
     const payload = JSON.parse(request.body)
 
     try {
