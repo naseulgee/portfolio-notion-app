@@ -14,19 +14,14 @@
         </div>
     </section>
     <!-- e: 프로젝트 -->
-    <!-- s: 성과 -->
-    <section class="py-5">
-        <Performance />
-    </section>
-    <!-- e: 성과 -->
     <!-- s: 풋터 슬로건 -->
     <section class="overflow-hidden">
         <RouterLink
             class="text-hover-none text-decoration-none"
-            to="/contact">
+            to="/">
             <div class="container mt-4">
                 <ArrowBottomBtn>
-                    Contact
+                    About Me
                 </ArrowBottomBtn>
             </div>
             <SloganSlide />
@@ -39,7 +34,6 @@
 import Intro from '~/components/projects/Intro'
 import SearchPortfolio from '~/components/projects/SearchPortfolio'
 import PortfolioList from '~/components/projects/PortfolioList'
-import Performance from '~/components/projects/Performance'
 import SloganSlide from '~/components/common/slogan/SloganSlide'
 import ArrowBottomBtn from '~/components/common/buttons/ArrowBottomBtn'
 
@@ -48,7 +42,6 @@ export default {
         Intro,
         SearchPortfolio,
         PortfolioList,
-        Performance,
         SloganSlide,
         ArrowBottomBtn
     },

@@ -3,6 +3,8 @@ import App from "./App"
 import router from "./routes" // 특정 폴더 안의 index.js 는 생략 가능하다. /routes/index.js
 import store from "./store"
 import loadImage from "./plugins/loadImage"
+import typing from "./plugins/typing"
+import randomColor from "./plugins/randomColor"
 
 // NOTE: fontawesome 호출
 // [참고] https://velog.io/@devbinna/Vue.js-fontawesome-%EC%82%AC%EC%9A%A9
@@ -21,4 +23,6 @@ createApp(App) //Root 컴포넌트 연결
 .use(router)   //라우터 플러그인 연결
 .use(store)    //store 플러그인 연결
 .use(loadImage)//커스텀 플러그인 연결
+.use(typing)
+.use(randomColor)
 .mount("#app") //렌더링할 HTML 요소 지정

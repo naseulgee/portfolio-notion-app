@@ -22,7 +22,7 @@
         data-them="white">
         <RouterLink
             class="text-hover-none text-decoration-none"
-            to="/about-me">
+            to="/">
             <div class="container mt-5">
                 <ArrowBottomBtn>
                     About Me

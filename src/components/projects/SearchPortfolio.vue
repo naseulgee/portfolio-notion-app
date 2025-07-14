@@ -1,5 +1,6 @@
 <template>
     <form
+        @submit.prevent
         class="container my-4"
         ref="filterListWrap">
         <button
@@ -8,6 +9,18 @@
             <font-awesome-icon icon="fa-solid fa-filter" />
             <span class="ms-1">Filter</span>
         </button>
+        <button
+            v-show="Object.values(formData).join('').length != 0"
+            class="reset ms-1 border-0 bg-transparent text-white fs-4"
+            @click="reset">
+            <font-awesome-icon
+                class="icon"
+                icon="fa-solid fa-rotate-right" />
+            <span class="ms-1">Reset</span>
+        </button>
+        <p class="m-0 float-end">
+            Total ( {{ portfoliosCnt }} )
+        </p>
         <div
             class="filterList overflow-hidden"
             :style="{height: filterHeight + 'px'}">
@@ -35,12 +48,17 @@
                                 @click="search"
                                 v-model="formData[filter.name]" />
                             <label
+                                v-if="val.relatedCnt == 0"
+                                class="btn btn-outline-secondary btn-sm me-1 disabled"
+                                :for="val.id">
+                                <NotionObj :prop="{ type: 'rich_text', rich_text: [{plain_text: val.name}] }" />
+                            </label>
+                            <label
+                                v-else
                                 class="btn btn-outline-primary btn-sm me-1"
                                 :for="val.id">
                                 <NotionObj :prop="{ type: 'rich_text', rich_text: [{plain_text: val.name}] }" />
-                                <small
-                                    v-if="val.relatedCnt > 0"
-                                    class="opacity-50">
+                                <small class="opacity-50">
                                     ({{ val.relatedCnt }})
                                 </small>
                             </label>
@@ -49,9 +67,6 @@
                 </template>
             </ul>
         </div>
-        <p class="mt-1">
-            Total ( {{ portfoliosCnt }} )
-        </p>
     </form>
 </template>
 
@@ -100,6 +115,12 @@ export default {
                 filters: this.formData
             })
         },
+        reset() { // 필터 초기화
+            this.$store.dispatch('notion/setFilters', {
+                filters: {}
+            })
+            Object.keys(this.formData).forEach(key => this.formData[key] = [])
+        },
         slideDown() {
             this.$refs.filterListWrap.classList.toggle('on')
             if(this.$refs.filterListWrap.classList.contains('on')){
@@ -110,16 +131,24 @@ export default {
         }
     },
     unmounted() {
-        // 필터 초기화
-        this.$store.dispatch('notion/setFilters', {
-            filters: {}
-        })
+        this.reset()
     },
 }
 </script>
 
 <style lang="scss" scoped>
 .container{
+    .reset{
+        .icon{
+            transform-origin: center;
+            transition: $transition-base;
+        }
+        &:hover{
+            .icon{
+                transform: rotate(360deg);
+            }
+        }
+    }
     .filterList{
         line-height: 2.5;
         transition: $transition-base;

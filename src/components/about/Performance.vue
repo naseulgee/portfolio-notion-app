@@ -7,7 +7,7 @@
             제가 개발한 것들이 비즈니스적으로 어떤 파급효과가 있었는지 살펴보기 위해 분석했습니다.
         </p>
     </div>
-    <ul class="d-flex justify-content-between m-0 p-1">
+    <ul class="d-flex gap-2 w-100 mx-auto pt-1 px-2 pb-3">
         <li
             class="hover-box"
             @click="showModal">
@@ -98,10 +98,32 @@ export default {
 
 <style lang="scss" scoped>
 ul{
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+        height: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--bs-gray-500);
+        border-radius: 10px;
+        border: 2px solid var(--bs-gray-200);
+    }
+    &::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background-color: var(--bs-gray-200);
+    }
     .hover-box{
+        flex-shrink: 0;
         width: 32.5%;
+        min-width: 500px;
         height: 400px;
+        max-width: 70vw;
         font-size: 1.5rem;
+        &:nth-child(even){
+            transform: translateY(-(map-get($spacers, 1)));
+        }
+        &:nth-child(odd){
+            transform: translateY(map-get($spacers, 2));
+        }
     }
 }
 </style>

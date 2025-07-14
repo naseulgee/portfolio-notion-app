@@ -49,7 +49,7 @@ export default {
         },
         slotText() {
             const arr = [
-                ...this.slogans['About Me'].split('-'),
+                ...this.slogans['Home'].split('-'),
                 ...this.slogans['Projects'].split('-'),
             ]
             // 랜덤 섞기

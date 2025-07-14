@@ -13,12 +13,13 @@ export default {
     state     : () => {
         return {
             loading   : false,
-            portfolios: [],
+            portfolios: {},
             addImages : {},
             filterList: [], // 속성 목록
             filters   : {}, // 속성 필터링 조건 목록
             stackList : {},
             stackFList: [], // 필터용 스택 목록
+            filterNames: {}, // 관계형 속성 이름 꺼내기
         }
     },
     // 계산된 데이터. computed와 유사
@@ -27,8 +28,9 @@ export default {
         // NOTE: API 를 이용하여 필터링한 데이터를 받을 수 도 있지만, getters 연습과 네트워크 사용을 줄여보기 위해 getters로 작성함
         filteredPortfolios: state => {
             const { portfolios, filters } = state
+            const portfolioValues = Object.values(portfolios)
             // 선택된 필터링 조건이 없으면 포트폴리오 전체 리스트 전달
-            if(!filters || Object.values(filters).join('').length == 0) return portfolios
+            if(!filters || Object.values(filters).join('').length == 0) return portfolioValues.filter(portfolio => portfolio.properties['상위 항목'].relation.length == 0)
             // console.log("filters:::", filters)
 
             const filteredPortfolios = {}
@@ -38,23 +40,26 @@ export default {
                 // console.log("filterValues:::", filterValues)
                 if(!filterValues || filterValues.length == 0) continue
 
-                for (let j = 0; j < filterValues.length; j++) {
-                    const filterString = filterValues[j]; // 속성값
+                for (const filterString of filterValues) { // 속성값
                     // console.log("filterString:::", filterString)
+                    for (const portfolio of portfolioValues) { // 포트폴리오
+                        const { relation } = portfolio.properties[key]
+                        // console.log("portfolio:::", portfolio, relation)
 
-                    for (let k = 0; k < portfolios.length; k++) {
-                        const portfolio = portfolios[k] // 포트폴리오
-                        const { type, select, multi_select, relation } = portfolio.properties[key]
-                        // console.log("portfolio:::", portfolio, type, select, multi_select, relation)
-
-                        let propertiesNameList = select?.id
-                        if(type == "multi_select") propertiesNameList = multi_select?.map(select => select.id)
-                        if(type == "relation"    ) propertiesNameList = relation?.map(rel => rel.id)
+                        let propertiesNameList = relation?.map(rel => rel.id)
                         // console.log("propertiesNameList:::", propertiesNameList)
 
-                        if(propertiesNameList?.includes(filterString)) {
-                            filteredPortfolios[portfolio.id] = portfolio
-                        }
+                        filterString.split(',').forEach(fs => { // id 가 여러개일 수 있음(버전이 여러개라)
+                            if(propertiesNameList?.includes(fs)) {
+                                // [24.12.04] 마이그레이션 프로젝트를 하위 항목으로 이동하는 구조 변경에 따른 로직 변경
+                                const topProtfolios = portfolio.properties['상위 항목'].relation
+                                if(topProtfolios.length > 0){ // 상위 항목이 있다면 상위 프로젝트를
+                                    topProtfolios.map(topProtfolio => filteredPortfolios[topProtfolio.id] = portfolios[topProtfolio.id])
+                                } else { // 없다면 자신을 추가
+                                    filteredPortfolios[portfolio.id] = portfolio
+                                }
+                            }
+                        })
                     }
                 }
             }
@@ -65,19 +70,13 @@ export default {
         portfolio: state => id => {
             const { portfolios } = state
             if(portfolios.length == 0) return null
-            if(!id) return portfolios[0]
-
-            for (const el of portfolios) {
-                if(el.id == id) {
-                    console.log("portfolio:::", el)
-                    return el
-                }
-            }
+            if(!id) return Object.values(portfolios)[0]
+            return portfolios[id]
         },
         filterWithStack(state) {
             return [
-            ...state.filterList,
-            ...state.stackFList,
+                ...state.filterList,
+                ...state.stackFList,
             ]
         }
     },
@@ -87,7 +86,7 @@ export default {
     */
     mutations : {
         resetPortfolios(state) {
-            state.portfolios = []
+            state.portfolios = {}
             state.loading = false
         },
         resetAddImages(state) {
@@ -126,6 +125,10 @@ export default {
                     },
                     sorts: [
                         {
+                            property: 'fixed',
+                            direction: 'descending', // ascending
+                        },
+                        {
                             property: '기간',
                             direction: 'descending', // ascending
                         },
@@ -133,8 +136,12 @@ export default {
                 })
                 console.log("searchPortfolios:::res:::", res.data)
 
+                const portfolios = res.data.results.reduce((newObj, obj) => {
+                    newObj[obj.id] = obj
+                    return newObj
+                }, {})
                 context.commit('updateState', {
-                    portfolios: res.data.results,
+                    portfolios,
                     loading: false,
                 })
             } catch (error) {
@@ -148,24 +155,71 @@ export default {
             if(context.state.filterList.length != 0) return
 
             try {
-                // 일반 필터 조회
-                const res = await _fetchNotion({
-                    isTable: true
-                })
-                // console.log("searchFilterList:::res:::", res.data.properties)
+                // [24.09.22] 포트폴리오 관련 갯수를 설정하기 위해 타입을 relation 으로 변경
+                // select, multi_select 타입일 경우
+                // // 일반 필터 조회
+                // const res = await _fetchNotion({
+                //     isTable: true
+                // })
+                // // console.log("searchFilterList:::res:::", res.data.properties)
+                // const filterList = Object.values(res.data.properties).filter(pp => {
+                //     if(pp.name == '분류' || pp.name == '담당분야') return pp
+                // })
 
-                const filterList = Object.values(res.data.properties).filter(pp => {
-                    if(pp.name == '분류' || pp.name == '담당분야') return pp
+                // relation 타입일 경우
+                const pjtTypeRes = await _fetchNotionPjtType({
+                    sorts: [
+                        {
+                            property: 'order',
+                            direction: 'descending',
+                        },
+                    ],
                 })
+                const partRes = await _fetchNotionPartPosition({
+                    sorts: [
+                        {
+                            property: 'order',
+                            direction: 'ascending',
+                        },
+                    ],
+                })
+                console.log("pjtTypeRes:::", pjtTypeRes.data.results)
+                console.log("partRes:::", partRes.data.results)
+
+                // multi_select 타입 형식 맞추기
+                const filterNames = {} // 포트폴리오 목록 표기 시 이름을 빨리 찾기 위한 설정
+                const filterList = [
+                    { name: '분류', type: 'multi_select', multi_select: { options: [] } },
+                    { name: '담당분야', type: 'multi_select', multi_select: { options: [] } },
+                ]
+                pjtTypeRes.data.results.forEach(part => {
+                    const id = part.id
+                    const name = part.properties.name.title[0].plain_text
+                    const relatedCnt = part.properties.relPage.relation.length
+                    filterNames[id] = name
+
+                    filterList[0].multi_select.options.push({ id, name, relatedCnt })
+                })
+                partRes.data.results.forEach(part => {
+                    const id = part.id
+                    const name = part.properties.name.title[0].plain_text
+                    const relatedCnt = part.properties.relPage.relation.length
+                    filterNames[id] = name
+
+                    filterList[1].multi_select.options.push({ id, name, relatedCnt })
+                })
+
                 console.log("searchFilterList:::filtered:::", filterList)
 
                 context.commit('updateState', {
-                    filterList
+                    filterList,
+                    filterNames,
                 })
             } catch (error) {
                 console.log(error)
                 context.commit('updateState', {
-                    filterList: []
+                    filterList: [],
+                    filterNames: {},
                 })
             }
         },
@@ -178,14 +232,22 @@ export default {
         // 첨부 이미지 목록 검색
         async searchAddImages({ commit }, payload) {
             try {
-                const { database_id } = payload
-                // [참고] https://developers.notion.com/reference/property-object
-                const res = await _fetchNotionAddImages({
-                    ...payload,
-                    filter: {
+                const { database_id, children_ids = [] } = payload
+                const filter = {
+                    or: [{
                         property: "Project API",
                         relation: { contains: database_id }
-                    },
+                    }]
+                }
+                children_ids.map(children_id => {
+                    filter.or.push({
+                        property: "Project API",
+                        relation: { contains: children_id }
+                    })
+                })
+                // [참고] https://developers.notion.com/reference/property-object
+                const res = await _fetchNotionAddImages({
+                    filter,
                     sorts: [
                         {
                             property: 'pagetype',
@@ -206,7 +268,7 @@ export default {
                     if(!imgList[typeName] || imgList[typeName].length == 0) imgList[typeName] = []
                     imgList[typeName].push({
                         url,
-                        pagedec: pagedecText ? pagedecText : imgName,
+                        pagedec: pagedecText ?? imgName,
                         pagetype: pagetype.select?.name,
                     })
                     if(point.checkbox) imgList.point = { url, pagedec: imgName }
@@ -245,7 +307,7 @@ export default {
                         },
                         {
                             property: 'order',
-                            direction: 'ascending', // descending
+                            direction: 'descending',
                         },
                     ],
                 })
@@ -266,7 +328,7 @@ export default {
 
                     // 스택
                     const { id, icon } = stack
-                    const stackName = name.title[0].plain_text
+                    const stackName = name.title[0].plain_text.split(' ')[0]
                     // 관련 프로젝트 개수 세팅
                     let relatedCnt = 0
                     Object.values(stack.properties).forEach(pp => {
@@ -274,7 +336,14 @@ export default {
                     })
 
                     // 실제 값 넣기
-                    multiStackList[pname].multi_select.options.push({ id, name: stackName, icon, hide: hide.checkbox, relatedCnt })
+                    const optionList = multiStackList[pname].multi_select.options
+                    const beforeOp = optionList[optionList.length - 1]
+                    if(beforeOp?.name == stackName){ // 만약 이전 스택명과 이름이 같다면(버전만 다르다면)
+                        beforeOp.id         = beforeOp.id + ',' + id
+                        beforeOp.relatedCnt = beforeOp.relatedCnt + relatedCnt
+                    } else {
+                        optionList.push({ id, name: stackName, icon, hide: hide.checkbox, relatedCnt })
+                    }
                 })
                 console.log("searchStackList:::stackList:::", stackList)
                 console.log("searchStackList:::multiStackList:::", multiStackList)
@@ -303,6 +372,12 @@ async function _fetchNotionAddImages(payload) {
 }
 async function _fetchNotionContact(payload) {
     return await axios.post('/.netlify/functions/notionContact', payload)
+}
+async function _fetchNotionPartPosition(payload) {
+    return await axios.post('/.netlify/functions/notionPartPosition', payload)
+}
+async function _fetchNotionPjtType(payload) {
+    return await axios.post('/.netlify/functions/notionPjtType', payload)
 }
 async function _fetchNotionStacks(payload) {
     return await axios.post('/.netlify/functions/notionStacks', payload)
