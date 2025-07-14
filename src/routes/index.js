@@ -10,6 +10,8 @@ import AboutMe from '~/views/AboutMe'
 import Projects from '~/views/Projects'
 import ProjectDetail from '~/views/ProjectDetail'
 import Contact from '~/views/Contact'
+import TaskReport from '~/views/TaskReport'
+import TaskReportLayout from '~/layout/TaskReportLayout'
 
 export default createRouter({
     /** history 값 종류
@@ -88,6 +90,15 @@ export default createRouter({
             component: Contact,
             meta: {
                 next: 'About Me'
+            }
+        },
+        {
+            name: 'Task Report',
+            path: '/taks-report',
+            component: TaskReport,
+            meta: {
+                isHide: true,
+                layout: TaskReportLayout
             }
         },
     ]

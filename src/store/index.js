@@ -4,6 +4,7 @@
  */
 import { createStore } from 'vuex'
 import notion from './notion'
+import notionTask from './notionTask'
 import about from './about'
 import modal from './modal'
 import slogans from './slogans'
@@ -14,6 +15,7 @@ export default createStore({
     // 상태를 관리하는 파일을 따로 생성하고 해당 파일에 모듈로 등록한다
     modules: {
         notion,
+        notionTask,
         about,
         modal,
         slogans,
