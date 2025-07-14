@@ -7,7 +7,7 @@ exports.handler = async () => {
 
     try {
         const notion = new Client({ auth: process.env.NOTION_TASK_REPORT_KEY })
-        let res = await notion.databases.query(payload)
+        let res = await notion.search(payload)
         return {
             statusCode: 200,
             body: JSON.stringify(res),
