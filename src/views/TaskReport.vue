@@ -34,7 +34,7 @@ export default {
         
     },
     mounted() {
-        this.$store.dispatch('notion/searchPortfolios')
+        this.$store.dispatch('notionTask/searchTaskDataBases')
 /*
 option = {
   tooltip: {
